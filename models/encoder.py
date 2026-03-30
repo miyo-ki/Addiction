@@ -19,11 +19,16 @@ def labelEncoder(df):
 
 
 def oneHotEncoder(df):
-    
+    """
+    OneHotEncoder créé une nouvelle colonne pour chaque catégorie possible. Chaque colonne contient 1 si l'individu appartient à la catégorie, sinon 0. 
+    Les catégories ne sont plus hiérarchisées mais cela augmente grandement le nombre de colonne. 
+
+    L'argument sparse_output=False permet de stocker les données dans un tableau numpy
+
+    handle_unknown='ignore' évite les erreurs si une catégorie apparaît dans le test mais pas dans le train
+    """
     categorical_cols = df.select_dtypes(include='object').columns
 
-    # sparse_output=False permet d'avoir un tableau numpy classique
-    # handle_unknown='ignore' évite les erreurs si une catégorie apparaît dans le test mais pas dans le train
     encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
 
     categorical_data = df[categorical_cols]
