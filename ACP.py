@@ -1,5 +1,5 @@
 
-
+import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
@@ -14,3 +14,4 @@ def ACP(df, n_components=0.95):
     data_sortie = pca.fit_transform(X)
 
     return data_sortie
+
