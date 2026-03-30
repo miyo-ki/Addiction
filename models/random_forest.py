@@ -40,16 +40,16 @@ def run(X_train, X_test, y_train, y_test) -> dict:
     # 2. Optimisation par GridSearchCV                                     #
     # ------------------------------------------------------------------ #
     param_grid = {
-        'n_estimators'     : [100, 200, 300],
-        'max_depth'        : [None, 5, 10, 20],
-        'min_samples_split': [2, 5, 10],
-        'min_samples_leaf' : [1, 2, 4],
+        'n_estimators'     : [50, 100],
+        'max_depth'        : [None, 5, 10],
+        'min_samples_split': [2, 5],
+        'min_samples_leaf' : [1, 2],
     }
 
     grid_search = GridSearchCV(
         RandomForestRegressor(random_state=42, n_jobs=-1),
         param_grid,
-        cv=5,
+        cv=3,
         scoring='r2',
         n_jobs=-1,
     )

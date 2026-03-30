@@ -4,6 +4,7 @@ from xgboost import XGBRegressor
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+
 def run(X_train, X_test, y_train, y_test) -> dict:
     
     xgb_default = XGBRegressor(
@@ -23,16 +24,16 @@ def run(X_train, X_test, y_train, y_test) -> dict:
     }
 
     param_grid = {
-        'n_estimators' : [50, 100, 200],
-        'max_depth' : [3, 5, 6, 10],
-        'learning_rate' : [0.05, 0.1, 0.2],
+        'n_estimators' : [50, 100],
+        'max_depth' : [3, 5],
+        'learning_rate' : [0.05, 0.1],
         'subsample' : [0.8, 1.0],
     }
 
     grid_search = GridSearchCV(
         XGBRegressor(random_state=42),
         param_grid,
-        cv=5,
+        cv=3,
         scoring='r2',
         n_jobs=-1,
     )

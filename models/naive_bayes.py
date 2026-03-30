@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split, cross_val_score, Stratifie
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, cross_val_score
 from sklearn.metrics import (accuracy_score, roc_auc_score, classification_report, confusion_matrix,)
+
 def run(X_train, X_test, Y_train, Y_test) -> dict:
     """
     Entraîne, évalue et optimise un GaussianNB (Naive Bayes)
@@ -49,13 +50,13 @@ def run(X_train, X_test, Y_train, Y_test) -> dict:
     # var_smoothing : stabilise la variance des features pour éviter les provabilité nulles. On explore sur une échelle log.
     #sélecrionne la valeur qui maximise l'AUC en validation croisée
     param_grid = {
-        'var_smoothing' : np.logspace(-11, -1, 20)
+        'var_smoothing' : np.logspace(-11, -5, 10)
     }
 
     grid_search = GridSearchCV(
         GaussianNB(),
         param_grid,
-        cv = StratifiedKFold(n_splits = 5, shuffle = True, random_state = 42),
+        cv = StratifiedKFold(n_splits = 3, shuffle = True, random_state = 42),
         scoring = 'roc_auc',
         n_jobs = -1,
     )

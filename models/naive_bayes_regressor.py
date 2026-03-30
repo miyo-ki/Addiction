@@ -4,7 +4,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-
 def run(X_train, X_test, y_train, y_test) -> dict:
     """
     Entraîne, évalue et optimise un GaussianNB utilisé en régression.
@@ -52,13 +51,13 @@ def run(X_train, X_test, y_train, y_test) -> dict:
     # 2. Optimisation par GridSearchCV                                     #
     # ------------------------------------------------------------------ #
     param_grid = {
-        'var_smoothing': np.logspace(-11, -1, 20)
+        'var_smoothing': np.logspace(-11, -5, 10)
     }
 
     grid_search = GridSearchCV(
         GaussianNB(),
         param_grid,
-        cv=5,
+        cv=3,
         scoring='r2',
         n_jobs=-1,
     )

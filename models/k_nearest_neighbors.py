@@ -46,7 +46,7 @@ def run(X_train, X_test, Y_train, Y_test) -> dict:
     #-------------------------------------------------------------------#
     #grille des paramètre à tester pour KNN : nombre de voisins, poids et métrique de distance
     param_grid = {
-        'n_neighbors': [3, 5, 7, 9, 11],
+        'n_neighbors': [3, 5, 7],
         'weights': ['uniform', 'distance'],
         'metric': ['euclidean', 'manhattan']
     }
@@ -55,7 +55,7 @@ def run(X_train, X_test, Y_train, Y_test) -> dict:
     grid_search = GridSearchCV(
         KNeighborsClassifier(),
         param_grid,
-        cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=42),
+        cv=StratifiedKFold(n_splits=3, shuffle=True, random_state=42),
         scoring='roc_auc',
         n_jobs=-1,
     )
