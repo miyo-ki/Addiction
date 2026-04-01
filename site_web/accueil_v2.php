@@ -2,51 +2,51 @@
 $datasets = [
     [
         "id" => 1,
-        "slug" => "social-media",
+        "slug" => "social-addiction",
         "title" => "Addiction aux Réseaux Sociaux",
-        "subtitle" => "Social Media Addiction",
+        "subtitle" => "Social Addiction",
         "description" => "Analyse comportementale de l'usage excessif des plateformes numériques et son impact sur la santé mentale.",
         "entries" => "2 341 entrées",
         "tags" => ["Comportement", "Numérique", "Santé Mentale"],
         "icon" => "📱",
         "color" => "amber",
-        "file" => "dataset1.php"
+        "file" => "social_addiction.php"
     ],
     [
         "id" => 2,
         "slug" => "substances",
-        "title" => "Addiction aux Substances",
-        "subtitle" => "Substance Use Disorder",
+        "title" => "Addiction à l'alcool des étudiants, avec notes en math",
+        "subtitle" => "Student-mat",
         "description" => "Étude épidémiologique sur la consommation d'alcool, tabac et drogues dans différentes tranches d'âge.",
         "entries" => "4 812 entrées",
         "tags" => ["Épidémiologie", "Substances", "Âge"],
         "icon" => "⚗️",
         "color" => "rose",
-        "file" => "dataset2.php"
+        "file" => "student-mat.php"
     ],
     [
         "id" => 3,
         "slug" => "jeux-video",
-        "title" => "Addiction aux Jeux Vidéo",
-        "subtitle" => "Gaming Disorder",
+        "title" => "Addiction aux mobiles",
+        "subtitle" => "mobile-addiction",
         "description" => "Mesure du temps de jeu, des patterns d'usage et des corrélations avec l'isolement social.",
         "entries" => "1 678 entrées",
         "tags" => ["Gaming", "Isolement", "Jeunes"],
         "icon" => "🎮",
         "color" => "cyan",
-        "file" => "dataset3.php"
+        "file" => "mobile_addiction.php"
     ],
     [
         "id" => 4,
         "slug" => "jeux-hasard",
-        "title" => "Addiction aux Jeux de Hasard",
+        "title" => "Addiction population alcool",
         "subtitle" => "Gambling Addiction",
         "description" => "Profil socio-économique des joueurs compulsifs et facteurs de risque associés à la dépendance.",
         "entries" => "3 056 entrées",
         "tags" => ["Économie", "Risque", "Comportement"],
         "icon" => "🎲",
         "color" => "violet",
-        "file" => "dataset4.php"
+        "file" => "addiction_population.php"
     ]
 ];
 
