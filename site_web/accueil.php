@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Addiction</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
   <header>
@@ -12,13 +12,10 @@
       <h1 class="logo">Addiction</h1>
       <ul>
         <li class="active">Accueil </li>
-
         <li><a href="social_addiction.php">social_addiction</a></li>
         <li><a href="mobile_addiction.php">mobile_addiction</a></li>
         <li><a href="addiction_population.php">addiction_population</a></li>
         <li><a href="student-mat.php">student-mat</a></li>
-
-
         <li><a href="apropos.html">Informations sur les Addictions</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
