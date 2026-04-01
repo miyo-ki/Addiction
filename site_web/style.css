@@ -18,6 +18,13 @@ header {
   top: 0;
   width: 100%;
   z-index: 1000;
+  display: block;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 header nav {
@@ -72,4 +79,9 @@ footer {
 footer p {
   font-size: 0.95rem;
   margin: 0;
+}
+
+.explication {
+  padding: 2rem;
+  color: #000; /* ou la couleur de votre choix */
 }
