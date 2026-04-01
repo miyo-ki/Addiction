@@ -12,7 +12,13 @@
       <h1 class="logo">Addiction</h1>
       <ul>
         <li class="active">Accueil </li>
-        <li><a href="carte.php">Tester votre taux d'addiction</a></li>
+
+        <li><a href="social_addiction.php">social_addiction</a></li>
+        <li><a href="mobile_addiction.php">mobile_addiction</a></li>
+        <li><a href="addiction_population.php">addiction_population</a></li>
+        <li><a href="student-mat.php">student-mat</a></li>
+
+
         <li><a href="apropos.html">Informations sur les Addictions</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
