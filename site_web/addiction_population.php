@@ -36,9 +36,11 @@
         <p>&copy; 2026 Addictions. Tous droits réservés. | Projet réalisé par des étudiants de l'Université Paul Valéry</p>
     </footer>
    
+<?php
+$fichier = fopen("../BDD_initial/addiction_population_data.csv", "r");
+
+echo "<table border='1'>"
+?>
 </body>
 </html>
-<?php
-
-?>
 
