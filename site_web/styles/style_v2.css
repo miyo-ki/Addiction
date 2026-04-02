@@ -1,79 +1,13 @@
-génère moi la page d'accueil d'un site en php et css qui consiste à un projet étudiant sur l'analyse de 4 jeu de donnée sur l'addiction. Il doit disposer de 4 lien pour chaque jeu de donnée ainsi qu'un espace présentation dans l'accueil pour présenter notre projet.
-10:20
-Architected dark-themed PHP homepage with data visualization aesthetics
-
-Je vais créer une page d'accueil PHP/CSS soignée avec une direction artistique forte — thème sombre et éditorial, inspiré des tableaux de bord de data science, avec une typographie audacieuse.
-2 fichiers créés, lu un fichier
-
-Voici les deux fichiers prêts à déposer dans votre serveur PHP. Voici ce qui est inclus :
-
-index.php — la page principale avec :
-
-    Navbar fixe avec navigation ancrée et badge "Projet Étudiant"
-    Hero plein écran avec titre animé, statistiques globales (11 887 observations au total) et ligne de défilement décorative
-    Section Présentation en layout deux colonnes, avec les méthodes utilisées (statistiques, clustering, visualisation…)
-    4 cartes Dataset chacune avec sa couleur propre (amber, rose, cyan, violet), son icône, ses tags, le nombre d'entrées et un lien vers son fichier PHP (dataset1.php à dataset4.php)
-    Section Équipe avec 4 membres
-    Footer minimaliste
-
-style.css — thème dark éditorial avec :
-
-    Polices Google Fonts : Syne (display), Lora (corps), DM Mono (labels)
-    Animations d'entrée au scroll (Intersection Observer)
-    Palette sombre avec accents couleur par dataset
-    Entièrement responsive (mobile / tablette / desktop)
-
-Il vous suffira de créer les fichiers dataset1.php, dataset2.php, dataset3.php et dataset4.php pour chaque analyse, et de placer style.css au même niveau qu'index.php.
-Index
-Code · PHP 
-Style
-Code · CSS 
-Souhaitez-vous être averti lorsque Claude répond ?
 
 
-Claude est une IA et peut faire des erreurs. Veuillez vérifier les réponses.
-Style · CSS
-/* ════════════════════════════════════════
-   AddictData — Feuille de style principale
-   Thème : Dark editorial / Data Science
-   ════════════════════════════════════════ */
- 
-/* ── VARIABLES ── */
-:root {
-    --bg:       #0c0d11;
-    --bg-alt:   #111318;
-    --bg-card:  #161820;
-    --border:   rgba(255,255,255,0.07);
-    --text:     #e8e9f0;
-    --text-muted: #6b7280;
-    --text-dim: #9ca3af;
- 
-    --amber: #f59e0b;
-    --amber-dim: rgba(245,158,11,0.12);
-    --rose:  #f43f5e;
-    --rose-dim:  rgba(244,63,94,0.12);
-    --cyan:  #06b6d4;
-    --cyan-dim:  rgba(6,182,212,0.12);
-    --violet:#8b5cf6;
-    --violet-dim:rgba(139,92,246,0.12);
- 
-    --accent: var(--amber);
- 
-    --font-display: 'Syne', sans-serif;
-    --font-body:    'Lora', serif;
-    --font-mono:    'DM Mono', monospace;
- 
-    --radius: 16px;
-    --radius-sm: 8px;
-    --transition: 0.3s cubic-bezier(.4,0,.2,1);
+
+*, *::before, *::after { 
+    box-sizing: border-box; margin: 0; padding: 0; 
 }
- 
-/* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 html { scroll-behavior: smooth; }
 body {
     background: #fcf9f8;
-    color: var(--text);
     font-family: var(--font-body);
     font-size: 16px;
     line-height: 1.7;
@@ -127,7 +61,6 @@ img { display: block; max-width: 100%; }
     align-items: center;
     justify-content: center;
     width: 30px; height: 30px;
-    background: var(--amber);
     color: #000;
     border-radius: 6px;
     font-size: 1rem;
@@ -143,18 +76,16 @@ img { display: block; max-width: 100%; }
     border-radius: 6px;
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    color: var(--text-dim);
+
     transition: var(--transition);
 }
 .nav-links a:hover,
 .nav-links a.active {
-    color: var(--text);
     background: rgba(255,255,255,0.06);
 }
 .nav-badge {
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    color: var(--text-muted);
     padding: 4px 10px;
     border: 1px solid var(--border);
     border-radius: 99px;
@@ -183,7 +114,6 @@ img { display: block; max-width: 100%; }
 .grid-line {
     width: 1px;
     height: 100%;
-    background: var(--border);
     animation: fadeInLine 1.5s ease forwards;
     opacity: 0;
 }
@@ -220,7 +150,6 @@ img { display: block; max-width: 100%; }
     gap: 0.6rem;
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: var(--amber);
     letter-spacing: 0.05em;
     margin-bottom: 1.5rem;
     animation: slideUp 0.7s ease forwards;
@@ -230,7 +159,6 @@ img { display: block; max-width: 100%; }
 .dot {
     width: 7px; height: 7px;
     border-radius: 50%;
-    background: var(--amber);
     display: inline-block;
     animation: pulse 2s ease infinite;
 }
@@ -253,12 +181,10 @@ img { display: block; max-width: 100%; }
     font-style: italic;
     font-family: var(--font-body);
     font-weight: 400;
-    color: var(--amber);
 }
 .hero-sub {
     max-width: 520px;
     font-size: 1.05rem;
-    color: var(--text-dim);
     margin-bottom: 2.5rem;
     animation: slideUp 0.7s ease forwards;
     opacity: 0;
@@ -288,7 +214,6 @@ img { display: block; max-width: 100%; }
     transition: var(--transition);
 }
 .btn-primary {
-    background: var(--amber);
     color: #000;
 }
 .btn-primary:hover {
@@ -298,12 +223,10 @@ img { display: block; max-width: 100%; }
 }
 .btn-ghost {
     background: transparent;
-    color: var(--text-dim);
     border: 1px solid var(--border);
 }
 .btn-ghost:hover {
     border-color: rgba(255,255,255,0.2);
-    color: var(--text);
     transform: translateY(-2px);
 }
  
@@ -321,7 +244,6 @@ img { display: block; max-width: 100%; }
     display: flex;
     align-items: baseline;
     gap: 0.6rem;
-    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 0.75rem 1.25rem;
@@ -335,13 +257,11 @@ img { display: block; max-width: 100%; }
     font-family: var(--font-display);
     font-size: 1.6rem;
     font-weight: 800;
-    color: var(--amber);
     line-height: 1;
 }
 .stat-label {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--text-muted);
 }
  
 /* Scroll hint */
@@ -357,7 +277,6 @@ img { display: block; max-width: 100%; }
 .hero-scroll-hint span {
     font-family: var(--font-mono);
     font-size: 0.65rem;
-    color: var(--text-muted);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     writing-mode: vertical-lr;
@@ -365,7 +284,6 @@ img { display: block; max-width: 100%; }
 .scroll-line {
     width: 1px;
     height: 50px;
-    background: linear-gradient(to bottom, var(--amber), transparent);
     animation: scrollPulse 2s ease infinite;
 }
 @keyframes scrollPulse {
@@ -390,7 +308,6 @@ img { display: block; max-width: 100%; }
     gap: 0.75rem;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--amber);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 1.5rem;
@@ -399,7 +316,6 @@ img { display: block; max-width: 100%; }
     display: block;
     width: 2rem;
     height: 1px;
-    background: var(--amber);
     opacity: 0.6;
 }
 .section-title {
@@ -415,7 +331,6 @@ img { display: block; max-width: 100%; }
 /* ── PRÉSENTATION ── */
 .presentation {
     padding: 7rem 0;
-    background: var(--bg-alt);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
 }
@@ -431,12 +346,11 @@ img { display: block; max-width: 100%; }
     top: 5rem;
 }
 .pres-text {
-    color: var(--text-dim);
     margin-bottom: 1.25rem;
     font-size: 1rem;
     line-height: 1.8;
 }
-.pres-text strong { color: var(--text); font-weight: 500; }
+.pres-text strong { font-weight: 500; }
 .pres-methods {
     display: flex;
     flex-wrap: wrap;
@@ -448,7 +362,6 @@ img { display: block; max-width: 100%; }
     border-radius: 99px;
     background: rgba(245,158,11,0.1);
     border: 1px solid rgba(245,158,11,0.25);
-    color: var(--amber);
     font-family: var(--font-mono);
     font-size: 0.72rem;
 }
@@ -463,7 +376,6 @@ img { display: block; max-width: 100%; }
     gap: 1.5rem;
 }
 .card {
-    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 2rem;
@@ -491,7 +403,6 @@ img { display: block; max-width: 100%; }
 .card--cyan   { --c: var(--cyan);  --c-dim: var(--cyan-dim);  }
 .card--violet { --c: var(--violet);--c-dim: var(--violet-dim);}
  
-.card::before { background: var(--c-dim); }
 .card:hover { border-color: rgba(255,255,255,0.15); box-shadow: 0 0 0 1px var(--c-dim), 0 20px 48px rgba(0,0,0,0.4); }
  
 .card-header {
@@ -502,7 +413,6 @@ img { display: block; max-width: 100%; }
 .card-number {
     font-family: var(--font-mono);
     font-size: 0.75rem;
-    color: var(--c);
     opacity: 0.8;
     letter-spacing: 0.05em;
 }
@@ -514,7 +424,6 @@ img { display: block; max-width: 100%; }
 .card-subtitle {
     font-family: var(--font-mono);
     font-size: 0.7rem;
-    color: var(--text-muted);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     margin-bottom: 0.35rem;
@@ -525,11 +434,9 @@ img { display: block; max-width: 100%; }
     font-weight: 700;
     letter-spacing: -0.02em;
     margin-bottom: 0.75rem;
-    color: var(--text);
 }
 .card-desc {
     font-size: 0.88rem;
-    color: var(--text-muted);
     line-height: 1.65;
     margin-bottom: 0.75rem;
 }
@@ -545,7 +452,6 @@ img { display: block; max-width: 100%; }
     border: 1px solid var(--border);
     font-family: var(--font-mono);
     font-size: 0.65rem;
-    color: var(--text-dim);
 }
 .card-footer {
     display: flex;
@@ -558,7 +464,6 @@ img { display: block; max-width: 100%; }
 .card-entries {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--text-muted);
 }
 .card-link {
     display: inline-flex;
@@ -567,15 +472,12 @@ img { display: block; max-width: 100%; }
     font-family: var(--font-display);
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--c);
     padding: 0.45rem 1rem;
     border-radius: var(--radius-sm);
-    background: var(--c-dim);
     border: 1px solid transparent;
     transition: var(--transition);
 }
 .card-link:hover {
-    border-color: var(--c);
     transform: translateX(3px);
 }
 .card-link svg { transition: var(--transition); }
@@ -584,7 +486,6 @@ img { display: block; max-width: 100%; }
 /* ── ÉQUIPE ── */
 .equipe {
     padding: 7rem 0;
-    background: var(--bg-alt);
     border-top: 1px solid var(--border);
 }
 .team-grid {
@@ -593,7 +494,6 @@ img { display: block; max-width: 100%; }
     gap: 1.25rem;
 }
 .team-card {
-    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 1.75rem 1.5rem;
@@ -611,7 +511,6 @@ img { display: block; max-width: 100%; }
 .team-avatar {
     width: 56px; height: 56px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--amber), var(--rose));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -631,7 +530,6 @@ img { display: block; max-width: 100%; }
 .team-role {
     font-family: var(--font-mono);
     font-size: 0.68rem;
-    color: var(--text-muted);
     line-height: 1.4;
 }
  
@@ -653,13 +551,11 @@ img { display: block; max-width: 100%; }
     font-family: var(--font-display);
     font-size: 1rem;
     font-weight: 800;
-    color: var(--amber);
     letter-spacing: -0.02em;
 }
 .footer-copy {
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    color: var(--text-muted);
 }
  
 /* ── REVEAL ANIMATIONS ── */
