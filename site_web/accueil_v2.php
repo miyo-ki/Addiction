@@ -51,10 +51,10 @@ $datasets = [
 ];
 
 $members = [
-    ["name" => "Alice Martin", "role" => "Chef de projet & Data Analyst"],
-    ["name" => "Baptiste Nguyen", "role" => "Développeur & Visualisation"],
-    ["name" => "Clara Dufresne", "role" => "Statisticienne"],
-    ["name" => "David Okafor", "role" => "Rédaction & Recherche"],
+    ["name" => "Lea Carminati", "role" => "Chef de projet & Data Analyst"],
+    ["name" => "Mona Bourgeron", "role" => "Développeur & Visualisation"],
+    ["name" => "Sidney Dachez", "role" => "Statisticienne"],
+    ["name" => "Lana Schembri", "role" => "Rédaction & Recherche"],
 ];
 ?>
 <!DOCTYPE html>
@@ -63,7 +63,7 @@ $members = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AddictData — Analyse de l'Addiction</title>
-    <link rel="stylesheet" href="styles/style_v2.css">
+    <link rel="stylesheet" href="styles/style_v3.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
