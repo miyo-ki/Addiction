@@ -82,6 +82,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réseaux Sociaux — AddictData</title>
     <link rel="stylesheet" href="styles/style_general.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        /* ── Nav dropdown ── */
+        .nav-dropdown { position: relative; }
+        .nav-dropdown > a { cursor: pointer; }
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 0.75rem);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card, #fff);
+            border: 1px solid var(--border, rgba(0,0,0,0.08));
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 210px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            z-index: 100;
+            list-style: none;
+            margin: 0;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        .nav-dropdown-menu li a {
+            display: block;
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text, #1a1a1a);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .nav-dropdown-menu li a:hover { background: rgba(0,0,0,0.05); }
+        .nav-dropdown-menu li a.active { font-weight: 700; }
+        /* ── Charts ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 2rem;
+        }
+        @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+        .chart-card {
+            background: var(--bg-card, #fff);
+            border: 1px solid var(--border, rgba(0,0,0,0.08));
+            border-radius: 16px;
+            padding: 1.25rem 1.25rem 1rem;
+            overflow: hidden;
+            min-width: 0; /* fix grid overflow */
+        }
+        .chart-card-full {
+            grid-column: 1 / -1;
+        }
+        .chart-title {
+            font-family: var(--font-sans, 'Syne', sans-serif);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-dim, #666);
+            margin-bottom: 0.75rem;
+        }
+        .chart-canvas-wrap {
+            position: relative;
+            height: 190px;
+            width: 100%;
+        }
+        .chart-canvas-wrap-lg {
+            position: relative;
+            height: 160px;
+            width: 100%;
+        }
+        /* ── Résultat : graphique de positionnement ── */
+        .result-distribution-wrap {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: var(--bg-card, #fff);
+            border: 1px solid var(--border, rgba(0,0,0,0.08));
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .result-distribution-wrap .chart-title {
+            margin-bottom: 0.75rem;
+        }
+        .result-dist-canvas {
+            position: relative;
+            height: 160px;
+            width: 100%;
+        }
+        /* ── Message professionnel ── */
+        .pro-advice {
+            margin-top: 1.25rem;
+            padding: 1rem 1.25rem;
+            background: rgba(239,68,68,0.06);
+            border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 12px;
+            font-family: var(--font-mono, 'DM Mono', monospace);
+            font-size: 0.8rem;
+            color: #b91c1c;
+            display: none;
+        }
+        .pro-advice strong { display: block; margin-bottom: 0.25rem; font-size: 0.85rem; }
+    </style>
 </head>
 <body>
 
@@ -94,12 +200,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <span class="logo-text">AddictData</span>
         </a>
         <ul class="nav-links">
-            <li><a href="#presentation">Dataset</a></li>
-            <li><a href="#analyses">Analyses</a></li>
-            <li><a href="#modele">Modèle IA</a></li>
-            <li><a href="#prediction">Prédiction</a></li>
+            <li><a href="accueil_v2.php">Accueil</a></li>
+            <li class="nav-dropdown">
+                <a href="#">Datasets ▾</a>
+                <ul class="nav-dropdown-menu">
+                    <li><a href="social_addiction.php" class="active">Réseaux sociaux</a></li>
+                    <li><a href="addiction_population.php">Addiction population</a></li>
+                    <li><a href="mobile_addiction.php">Mobile addiction</a></li>
+                    <li><a href="student-mat.php">Student performance</a></li>
+                </ul>
+            </li>
         </ul>
-        <span class="nav-badge">Projet Étudiant 2025–2026</span>
     </div>
 </nav>
 
@@ -174,19 +285,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </p>
         <div class="info-grid">
             <div class="info-card">
-                <p class="info-card-title">📊 Variables clés</p>
+                <p class="info-card-title">Variables clés</p>
                 <p class="info-card-text">Âge, genre, niveau académique, pays, heures d'usage quotidien, plateforme principale, impact sur les études, heures de sommeil, score de santé mentale, statut relationnel, conflits liés aux réseaux.</p>
             </div>
             <div class="info-card">
-                <p class="info-card-title">🎯 Variable cible</p>
+                <p class="info-card-title">Variable cible</p>
                 <p class="info-card-text">Score d'addiction (2–9). Il s'agit d'un problème de <strong>régression</strong> : on prédit une valeur numérique continue, non une classe binaire.</p>
             </div>
             <div class="info-card">
-                <p class="info-card-title">🌍 Origine des données</p>
+                <p class="info-card-title">Origine des données</p>
                 <p class="info-card-text">Dataset public issu de Kaggle, compilé à partir d'enquêtes menées auprès d'étudiants de plusieurs universités. Utilisé à des fins strictement pédagogiques.</p>
             </div>
             <div class="info-card">
-                <p class="info-card-title">⚙️ Preprocessing</p>
+                <p class="info-card-title">Preprocessing</p>
                 <p class="info-card-text">Variables catégorielles encodées par LabelEncoder et OneHotEncoder. Split 80/20 (564 train / 141 test). ACP testée en complément.</p>
             </div>
         </div>
@@ -202,37 +313,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 les corrélations entre variables et les profils types d'étudiants.
             </p>
 
-            <div class="info-grid">
-                <div class="info-card">
-                    <p class="info-card-title">📈 Distribution du score</p>
-                    <p class="info-card-text">
-                        Le score moyen est de <strong>~5.4 / 9</strong>. La distribution est relativement symétrique,
-                        avec une légère surreprésentation des scores moyens (4–6). Peu d'étudiants sont
-                        en dessous de 3 ou au-dessus de 8.
-                    </p>
+            <div class="charts-grid">
+
+                <!-- Graphique 1 : Distribution du score d'addiction -->
+                <div class="chart-card">
+                    <p class="chart-title">Distribution du score d'addiction</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartDistribution"></canvas>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <p class="info-card-title">🔗 Corrélations fortes</p>
-                    <p class="info-card-text">
-                        Les variables les plus corrélées au score : <strong>heures d'usage quotidien</strong>,
-                        <strong>score de santé mentale</strong> (corrélation négative), et
-                        <strong>conflits liés aux réseaux sociaux</strong>.
-                    </p>
+
+                <!-- Graphique 2 : Score moyen par plateforme -->
+                <div class="chart-card">
+                    <p class="chart-title">Score moyen par plateforme</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartPlateforme"></canvas>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <p class="info-card-title">📱 Plateformes</p>
-                    <p class="info-card-text">
-                        Instagram et TikTok sont associés aux scores d'addiction les plus élevés.
-                        LinkedIn et Twitter présentent des scores nettement plus faibles en moyenne.
-                    </p>
+
+                <!-- Graphique 3 : Score moyen par genre -->
+                <div class="chart-card">
+                    <p class="chart-title">Score d'addiction selon le genre</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartGenre"></canvas>
+                    </div>
                 </div>
-                <div class="info-card">
-                    <p class="info-card-title">😴 Sommeil & santé mentale</p>
-                    <p class="info-card-text">
-                        Les étudiants avec moins de 6h de sommeil et un score de santé mentale faible
-                        présentent systématiquement des scores d'addiction plus élevés.
-                    </p>
+
+                <!-- Graphique 4 : Heures d'usage par niveau académique -->
+                <div class="chart-card">
+                    <p class="chart-title">Usage quotidien par niveau académique</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartNiveau"></canvas>
+                    </div>
                 </div>
+
+                <!-- Graphique 5 : Corrélation santé mentale -->
+                <div class="chart-card chart-card-full">
+                    <p class="chart-title">Corrélation : santé mentale & score d'addiction</p>
+                    <div class="chart-canvas-wrap-lg">
+                        <canvas id="chartCorrelations"></canvas>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -322,7 +444,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <!-- Fonctionnement -->
             <div class="info-card" style="border-left: none;">
-                <p class="info-card-title">🌲 Pourquoi Random Forest ?</p>
+                <p class="info-card-title">Pourquoi Random Forest ?</p>
                 <p class="info-card-text">
                     Le Random Forest construit <strong>plusieurs arbres de décision</strong> sur des
                     sous-ensembles aléatoires des données, puis moyenne leurs prédictions.
@@ -372,16 +494,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                     <div class="form-group">
                         <label class="form-label" for="country">Pays</label>
-                        <select class="form-select" id="country" name="country">
-                            <option value="France" selected>France</option>
-                            <option value="USA">USA</option>
-                            <option value="UK">UK</option>
-                            <option value="India">Inde</option>
-                            <option value="Canada">Canada</option>
-                            <option value="Australia">Australie</option>
-                            <option value="Germany">Allemagne</option>
-                            <option value="Brazil">Brésil</option>
-                        </select>
+                        <input class="form-input" list="country-list" id="country" name="country"
+                               placeholder="Saisir un pays…" value="France" required autocomplete="off">
+                        <datalist id="country-list">
+                            <?php
+                            $pays = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominican Republic","DR Congo","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Slovenia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Uganda","UK","Ukraine","UAE","Uruguay","USA","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+                            foreach ($pays as $p) echo "<option value=\"$p\">";
+                            ?>
+                        </datalist>
                     </div>
 
                     <div class="form-group">
@@ -458,6 +578,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="result-bar-wrap">
                     <div class="result-bar" id="resultBar"></div>
                 </div>
+
+                <!-- Positionnement dans la distribution -->
+                <div class="result-distribution-wrap">
+                    <p class="chart-title">Ton score dans la distribution générale</p>
+                    <div class="result-dist-canvas">
+                        <canvas id="chartResultPosition"></canvas>
+                    </div>
+                </div>
+
+                <!-- Conseil professionnel si score élevé -->
+                <div class="pro-advice" id="proAdvice">
+                    <strong> Score élevé détecté ! </strong>
+                    Ton score d'addiction est significativement élevé. Il peut être utile d'en parler à un professionnel de santé mentale (médecin, psychologue ou conseiller universitaire). Des ressources comme <em>Santé Psy Étudiant</em> proposent des consultations gratuites.
+                </div>
             </div>
 
             <!-- Message d'erreur -->
@@ -473,13 +607,202 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="footer-inner">
         <p class="footer-logo">AddictData</p>
         <p class="footer-copy">
-            Projet universitaire — IUT Informatique &nbsp;·&nbsp; 2024–2025 &nbsp;·&nbsp;
+            Projet universitaire — Science des données 4  &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; L3 MIASHS Université Paul Valéry Montpellier &nbsp;·&nbsp;
             Données à usage strictement pédagogique.
         </p>
     </div>
 </footer>
 
 <script>
+// ── Charts ──────────────────────────────────────────
+const chartDefaults = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+        x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { family: 'DM Mono', size: 11 }, color: '#888' } },
+        y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { font: { family: 'DM Mono', size: 11 }, color: '#888' } }
+    }
+};
+
+// 1 — Distribution du score d'addiction (histogramme)
+new Chart(document.getElementById('chartDistribution'), {
+    type: 'bar',
+    data: {
+        labels: ['2','3','4','5','6','7','8','9'],
+        datasets: [{
+            data: [18, 42, 78, 112, 143, 138, 98, 76],
+            backgroundColor: 'rgba(45,47,61,0.75)',
+            borderRadius: 6,
+            hoverBackgroundColor: 'rgba(45,47,61,1)',
+        }]
+    },
+    options: {
+        ...chartDefaults,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} étudiants` } }
+        },
+        scales: {
+            ...chartDefaults.scales,
+            y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb étudiants', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+        }
+    }
+});
+
+// 2 — Score moyen par plateforme
+new Chart(document.getElementById('chartPlateforme'), {
+    type: 'bar',
+    data: {
+        labels: ['TikTok','Instagram','Snapchat','YouTube','Facebook','WhatsApp','Twitter','LinkedIn'],
+        datasets: [{
+            data: [6.4, 6.1, 5.8, 5.3, 5.1, 4.9, 4.6, 4.1],
+            backgroundColor: [
+                'rgba(239,68,68,0.75)','rgba(239,68,68,0.6)','rgba(251,146,60,0.7)',
+                'rgba(251,146,60,0.55)','rgba(45,47,61,0.5)','rgba(45,47,61,0.4)',
+                'rgba(45,47,61,0.3)','rgba(45,47,61,0.2)'
+            ],
+            borderRadius: 6,
+        }]
+    },
+    options: {
+        ...chartDefaults,
+        indexAxis: 'y',
+        scales: {
+            x: { ...chartDefaults.scales.x, min: 0, max: 9, title: { display: true, text: 'Score moyen', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
+            y: { ...chartDefaults.scales.y }
+        }
+    }
+});
+
+// 3 — Score moyen par genre
+new Chart(document.getElementById('chartGenre'), {
+    type: 'bar',
+    data: {
+        labels: ['Homme', 'Femme', 'Non-binaire'],
+        datasets: [{
+            label: 'Score moyen',
+            data: [5.5, 5.3, 5.6],
+            backgroundColor: ['rgba(96,165,250,0.7)','rgba(244,114,182,0.7)','rgba(167,139,250,0.7)'],
+            borderRadius: 8,
+            barPercentage: 0.5,
+        }]
+    },
+    options: {
+        ...chartDefaults,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` Score moyen: ${ctx.parsed.y}` } }
+        },
+        scales: {
+            ...chartDefaults.scales,
+            y: { ...chartDefaults.scales.y, min: 0, max: 9 }
+        }
+    }
+});
+
+// 4 — Heures d'usage par niveau académique
+new Chart(document.getElementById('chartNiveau'), {
+    type: 'bar',
+    data: {
+        labels: ['Lycée', 'Licence', 'Master'],
+        datasets: [{
+            label: 'Médiane (h/j)',
+            data: [5.5, 4.8, 4.5],
+            backgroundColor: 'rgba(45,47,61,0.75)',
+            borderRadius: 6,
+            barPercentage: 0.4,
+        }]
+    },
+    options: {
+        ...chartDefaults,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} h/jour` } }
+        },
+        scales: {
+            ...chartDefaults.scales,
+            y: { ...chartDefaults.scales.y, title: { display: true, text: 'Heures / jour', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+        }
+    }
+});
+
+// 5 — Corrélations : santé mentale & performance académique
+// Données : score moyen d'addiction par tranche de mental_health (1-10)
+// et par impact sur les études (Oui/Non)
+new Chart(document.getElementById('chartCorrelations'), {
+    type: 'line',
+    data: {
+        labels: ['2','3','4','5','6','7','8','9'],
+        datasets: [{
+            label: 'Santé mentale moyenne',
+            data: [9.0, 8.0, 8.0, 7.1, 6.8, 5.9, 5.2, 4.5],
+            borderColor: 'rgba(239,68,68,0.85)',
+            backgroundColor: 'rgba(239,68,68,0.06)',
+            borderWidth: 2.5,
+            pointBackgroundColor: 'rgba(239,68,68,0.85)',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            tension: 0,
+            fill: false,
+        }]
+    },
+    options: {
+        ...chartDefaults,
+        plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` Santé mentale : ${ctx.parsed.y}` } }
+        },
+        scales: {
+            x: { ...chartDefaults.scales.x, title: { display: true, text: "Score d'addiction", font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
+            y: { ...chartDefaults.scales.y, min: 0, max: 10, title: { display: true, text: 'Santé mentale (moyenne)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+        }
+    }
+});
+
+// ── Graphique de positionnement du résultat ──────────────
+let resultPositionChart = null;
+const distData = [18, 42, 78, 112, 143, 138, 98, 76];
+const distLabels = ['2','3','4','5','6','7','8','9'];
+
+function updateResultPositionChart(userScore) {
+    const scoreRounded = Math.round(userScore);
+    const colors = distLabels.map((l, i) => {
+        const val = i + 2;
+        return Math.abs(val - scoreRounded) <= 0.5
+            ? 'rgba(239,68,68,0.85)'
+            : 'rgba(45,47,61,0.55)';
+    });
+
+    if (resultPositionChart) {
+        resultPositionChart.data.datasets[0].backgroundColor = colors;
+        resultPositionChart.update();
+    } else {
+        resultPositionChart = new Chart(document.getElementById('chartResultPosition'), {
+            type: 'bar',
+            data: {
+                labels: distLabels,
+                datasets: [{
+                    data: distData,
+                    backgroundColor: colors,
+                    borderRadius: 5,
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} étudiants` } }
+                },
+                scales: {
+                    x: { ...chartDefaults.scales.x },
+                    y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb étudiants', font: { size: 9, family: 'DM Mono' }, color: '#aaa' } }
+                }
+            }
+        });
+    }
+}
+
 // ── Scroll reveal ──
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -544,6 +867,13 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
             setTimeout(() => {
                 document.getElementById('resultBar').style.width = pct + '%';
             }, 50);
+
+            // Graphique de positionnement
+            setTimeout(() => updateResultPositionChart(parseFloat(score)), 100);
+
+            // Conseil professionnel si score ≥ 7
+            const advice = document.getElementById('proAdvice');
+            advice.style.display = parseFloat(score) >= 7 ? 'block' : 'none';
         }
     } catch (err) {
         document.getElementById('predictionError').textContent = 'Impossible de joindre le serveur.';
