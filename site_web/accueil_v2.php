@@ -51,10 +51,10 @@ $datasets = [
 ];
 
 $members = [
-    ["name" => "Lea Carminati", "role" => "Chef de projet & Data Analyst"],
-    ["name" => "Mona Bourgeron", "role" => "Développeur & Visualisation"],
-    ["name" => "Sidney Dachez", "role" => "Statisticienne"],
-    ["name" => "Lana Schembri", "role" => "Rédaction & Recherche"],
+    ["name" => "Lea Carminati"],
+    ["name" => "Mona Bourgeron"],
+    ["name" => "Sidney Dachez"],
+    ["name" => "Lana Schembri"],
 ];
 ?>
 <!DOCTYPE html>
@@ -67,6 +67,38 @@ $members = [
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        .nav-dropdown { position: relative; }
+        .nav-dropdown > a { cursor: pointer; }
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 0.75rem);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card, #fff);
+            border: 1px solid var(--border, rgba(0,0,0,0.08));
+            border-radius: 12px;
+            padding: 0.5rem;
+            min-width: 210px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            z-index: 100;
+            list-style: none;
+            margin: 0;
+        }
+        .nav-dropdown:hover .nav-dropdown-menu { display: block; }
+        .nav-dropdown-menu li a {
+            display: block;
+            padding: 0.55rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text, #1a1a1a);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.15s;
+        }
+        .nav-dropdown-menu li a:hover { background: rgba(0,0,0,0.05); }
+    </style>
 </head>
 <body>
 
@@ -76,16 +108,22 @@ $members = [
     <!-- ── NAVIGATION ── -->
     <nav class="navbar">
         <div class="nav-inner">
-            <a href="index.php" class="nav-logo">
+            <a href="accueil_v2.php" class="nav-logo">
                 <span class="logo-mark">A</span>
                 <span class="logo-text">ddictData</span>
             </a>
             <ul class="nav-links">
-                <li><a href="#presentation">Projet</a></li>
-                <li><a href="#datasets">Jeux de données</a></li>
-                <li><a href="#equipe">Équipe</a></li>
+                <li><a href="accueil_v2.php" class="active">Accueil</a></li>
+                <li class="nav-dropdown">
+                    <a href="#">Datasets ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="social_addiction.php">📱 Réseaux sociaux</a></li>
+                        <li><a href="addiction_population.php">🎲 Addiction population</a></li>
+                        <li><a href="mobile_addiction.php">📲 Mobile addiction</a></li>
+                        <li><a href="student-mat.php">⚗️ Alcool &amp; notes math</a></li>
+                    </ul>
+                </li>
             </ul>
-            <span class="nav-badge">Projet Étudiant 2024–2025</span>
         </div>
     </nav>
 
@@ -98,7 +136,7 @@ $members = [
         </div>
         <div class="hero-content">
             <p class="hero-eyebrow">
-                <span class="dot"></span> Analyse de données · IUT Informatique · 2024–2025
+                <span class="dot"></span> Analyse de données · Science des données 4 · 2025–2026
             </p>
             <h1 class="hero-title">
                 Comprendre<br>
@@ -241,7 +279,7 @@ $members = [
         <div class="footer-inner">
             <p class="footer-logo">AddictData</p>
             <p class="footer-copy">
-                Projet universitaire — IUT Informatique &nbsp;·&nbsp; 2024–2025 &nbsp;·&nbsp; 
+                Projet universitaire — Science des données 4 &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; L3 MIASHS Université Paul Valéry Montpellier &nbsp;·&nbsp;
                 Données à usage strictement pédagogique.
             </p>
         </div>
