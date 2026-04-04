@@ -6,46 +6,42 @@ $datasets = [
         "title" => "Addiction aux Réseaux Sociaux",
         "subtitle" => "Social Addiction",
         "description" => "Analyse comportementale de l'usage excessif des plateformes numériques et son impact sur la santé mentale.",
-        "entries" => "2 341 entrées",
+        "entries" => "705 entrées",
         "tags" => ["Comportement", "Numérique", "Santé Mentale"],
-        "icon" => "📱",
-        "color" => "amber",
+        "icon" => "💬",
         "file" => "social_addiction.php"
     ],
     [
         "id" => 2,
-        "slug" => "substances",
-        "title" => "Addiction à l'alcool des étudiants, avec notes en math",
-        "subtitle" => "Student-mat",
-        "description" => "Étude épidémiologique sur la consommation d'alcool, tabac et drogues dans différentes tranches d'âge.",
-        "entries" => "4 812 entrées",
-        "tags" => ["Épidémiologie", "Substances", "Âge"],
-        "icon" => "⚗️",
-        "color" => "rose",
+        "slug" => "Student-mat",
+        "title" => "Addiction à l'alcool des étudiants",
+        "subtitle" => "Alcool Addiction",
+        "description" => "Étude sur la consommation d'alcool chez les étudiants.",
+        "entries" => "395 entrées",
+        "tags" => ["Épidémiologie", "Alcool", "Étudiants"],
+        "icon" => "🍺",
         "file" => "student-mat.php"
     ],
     [
         "id" => 3,
-        "slug" => "jeux-video",
-        "title" => "Addiction aux mobiles",
-        "subtitle" => "mobile-addiction",
-        "description" => "Mesure du temps de jeu, des patterns d'usage et des corrélations avec l'isolement social.",
-        "entries" => "1 678 entrées",
-        "tags" => ["Gaming", "Isolement", "Jeunes"],
-        "icon" => "🎮",
-        "color" => "cyan",
+        "slug" => "mobile_addiction",
+        "title" => "Addiction aux téléphones mobiles",
+        "subtitle" => "Mobile Addiction",
+        "description" => "Mesure du temps d'écran, des patterns d'usage et des corrélations avec l'isolement social.",
+        "entries" => "3 000 entrées",
+        "tags" => ["Temps d'écran", "Santé Mentale", "Numérique"],
+        "icon" => "📱",
         "file" => "mobile_addiction.php"
     ],
     [
         "id" => 4,
-        "slug" => "jeux-hasard",
-        "title" => "Addiction population alcool",
-        "subtitle" => "Gambling Addiction",
-        "description" => "Profil socio-économique des joueurs compulsifs et facteurs de risque associés à la dépendance.",
-        "entries" => "3 056 entrées",
-        "tags" => ["Économie", "Risque", "Comportement"],
-        "icon" => "🎲",
-        "color" => "violet",
+        "slug" => "addiction_population",
+        "title" => "Addiction aux cigarettes",
+        "subtitle" => "Smoke Addiction",
+        "description" => "Analyse des tendances de consommation de tabac, des facteurs socio-économiques et des risques associés.",
+        "entries" => "3 000 entrées",
+        "tags" => ["Tabagisme", "Socio-économique", "Santé physique"],
+        "icon" => "🚬",
         "file" => "addiction_population.php"
     ]
 ];
@@ -89,7 +85,7 @@ $members = [
 
         <div class="hero-content">
             <p class="hero-eyebrow">
-                <span class="dot"></span> Analyse de données · MIASHS Paul Valéry · 2025–2026
+                <span class="dot"></span> Analyse de données · L3 MIASHS Université Paul Valéry Montpellier · 2025–2026
             </p>
             <h1 class="hero-title">
                 Comprendre<br>
@@ -99,6 +95,7 @@ $members = [
             <p class="hero-sub">
                 Quatre jeux de données. Quatre formes de dépendance.<br>
                 Une approche scientifique pour mieux comprendre un enjeu de société.
+                <BR>Besoin d'aide ? Consulter ce <a href="https://www.ameli.fr/assure/sante/themes/addictions/suivi">site</a>.
             </p>
             <div class="hero-cta">
                 <a href="#datasets" class="btn btn-primary">Explorer les données</a>
@@ -111,7 +108,7 @@ $members = [
                 <span class="stat-label">Jeux de données</span>
             </div>
             <div class="stat-pill">
-                <span class="stat-num">11 887</span>
+                <span class="stat-num">7 100</span>
                 <span class="stat-label">Observations</span>
             </div>
             <div class="stat-pill">
@@ -138,20 +135,21 @@ $members = [
                 </div>
                 <div class="pres-right">
                     <p class="pres-text">
-                        Dans le cadre de notre formation en <strong>informatique et science des données</strong>, 
+                        Dans le cadre de notre formation en licence de <strong>MIASHS</strong> (Mathématique et Informatique Appliquées aux Sciences Humaines et Sociales) de l'université Paul Valéry Montpellier, 
                         nous avons choisi d'explorer un sujet aux ramifications médicales, sociales et économiques 
                         profondes&nbsp;: <strong>l'addiction</strong>.
                     </p>
                     <p class="pres-text">
-                        Ce projet analyse quatre types de dépendance — aux réseaux sociaux, aux substances 
-                        psychoactives, aux jeux vidéo et aux jeux de hasard — à travers des techniques de 
+                        Ce projet analyse quatre types de dépendance — aux réseaux sociaux, à l'alcool chez les étudiants, aux téléphones portables et à la cigarette  — à travers des techniques de 
                         <strong>statistiques descriptives</strong>, de <strong>visualisation</strong> et de 
                         <strong>modélisation prédictive</strong>.
+                        Cependant, les différents jeux de données, à l'exception de celui portant sur l'addiction aux réseaux sociaux, ont été générés de manière aléatoire. De ce fait, ce projet a une vocation purement pédagogique et ne prétend pas à une quelconque validité scientifique.
                     </p>
                     <p class="pres-text">
                         Notre objectif&nbsp;: identifier des patterns comportementaux, des facteurs de risque 
                         et proposer des représentations visuelles exploitables pour sensibiliser à ces problématiques.
                     </p>
+
                     <div class="pres-methods">
                         <?php foreach (["Statistiques descriptives", "Corrélations", "Visualisation", "Modélisation", "Clustering"] as $m): ?>
                         <span class="method-tag"><?= $m ?></span>
@@ -232,7 +230,7 @@ $members = [
         <div class="footer-inner">
             <p class="footer-logo">AddictData</p>
             <p class="footer-copy">
-                Projet universitaire — MIASHS Paul Valéry &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; 
+                Projet universitaire — L3 MIASHS Université Paul Valéry Montpellier &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; 
                 Données à usage strictement pédagogique.
             </p>
         </div>
