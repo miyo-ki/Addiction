@@ -81,10 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réseaux Sociaux — AddictData</title>
-    <link rel="stylesheet" href="styles/style_v3.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style_general.css">
 </head>
 <body>
 
@@ -93,9 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
     <div class="nav-inner">
-        <a href="accueil_v2.php" class="nav-logo">
-            <span class="logo-mark">A</span>
-            <span class="logo-text">ddictData</span>
+        <a href="accueil.php" class="nav-logo">
+            <span class="logo-text">AddictData</span>
         </a>
         <ul class="nav-links">
             <li><a href="#presentation">Dataset</a></li>
@@ -103,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <li><a href="#modele">Modèle IA</a></li>
             <li><a href="#prediction">Prédiction</a></li>
         </ul>
-        <span class="nav-badge">Projet Étudiant 2024–2025</span>
+        <span class="nav-badge">Projet Étudiant 2025–2026</span>
     </div>
 </nav>
 
@@ -116,9 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </div>
     <div class="dataset-hero-inner">
         <div class="dataset-breadcrumb">
-            <a href="accueil_v2.php">Accueil</a>
+            <a href="accueil.php">Accueil</a>
             <span class="breadcrumb-sep">/</span>
-            <a href="accueil_v2.php#datasets">Jeux de données</a>
+            <a href="accueil.php#datasets">Jeux de données</a>
             <span class="breadcrumb-sep">/</span>
             <span>Réseaux Sociaux</span>
         </div>
