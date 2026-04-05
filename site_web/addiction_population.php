@@ -9,17 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     header('Content-Type: application/json');
 
     $fields = [
-        'age'             => FILTER_VALIDATE_INT,
-        'gender'          => FILTER_SANITIZE_SPECIAL_CHARS,
-        'academic_level'  => FILTER_SANITIZE_SPECIAL_CHARS,
-        'country'         => FILTER_SANITIZE_SPECIAL_CHARS,
-        'avg_daily_hours' => FILTER_VALIDATE_FLOAT,
-        'platform'        => FILTER_SANITIZE_SPECIAL_CHARS,
-        'affects_perf'    => FILTER_SANITIZE_SPECIAL_CHARS,
-        'sleep_hours'     => FILTER_VALIDATE_FLOAT,
-        'mental_health'   => FILTER_VALIDATE_INT,
-        'relationship'    => FILTER_SANITIZE_SPECIAL_CHARS,
-        'conflicts'       => FILTER_VALIDATE_INT,
+        'age'                      => FILTER_VALIDATE_INT,
+        'gender'                   => FILTER_SANITIZE_SPECIAL_CHARS,
+        'education_level'          => FILTER_SANITIZE_SPECIAL_CHARS,
+        'employment_status'        => FILTER_SANITIZE_SPECIAL_CHARS,
+        'annual_income_usd'        => FILTER_VALIDATE_INT,
+        'drinks_per_week'          => FILTER_VALIDATE_INT,
+        'age_started_smoking'      => FILTER_VALIDATE_INT,
+        'attempts_to_quit_smoking' => FILTER_VALIDATE_INT,
+        'mental_health_status'     => FILTER_SANITIZE_SPECIAL_CHARS,
+        'exercise_frequency'       => FILTER_SANITIZE_SPECIAL_CHARS,
+        'diet_quality'             => FILTER_SANITIZE_SPECIAL_CHARS,
+        'sleep_hours'              => FILTER_VALIDATE_FLOAT,
+        'social_support'           => FILTER_SANITIZE_SPECIAL_CHARS,
+        'addict_smoke'             => FILTER_VALIDATE_INT,
     ];
 
     $data = [];
@@ -32,24 +35,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $data[$k] = $val;
     }
 
-    // Chemin vers predict.py — même dossier que social_addiction.php
-    $predict_script = __DIR__ . '/predict.py';
+    // Chemin vers predict_smoke.py — même dossier que social_addiction.php
+    $predict_script = __DIR__ . '/predict_smoke.py';
     $python         = 'py'; // Windows MAMP
 
-    // predict.py attend les 11 valeurs comme arguments positionnels
+    // predict.py attend les 13 valeurs comme arguments positionnels
     // dans l'ordre exact de feature_names (cf. notebook)
     $args = implode(' ', [
         escapeshellarg((string)$data['age']),
         escapeshellarg($data['gender']),
-        escapeshellarg($data['academic_level']),
-        escapeshellarg($data['country']),
-        escapeshellarg((string)$data['avg_daily_hours']),
-        escapeshellarg($data['platform']),
-        escapeshellarg($data['affects_perf']),
+        escapeshellarg($data['education_level']),
+        escapeshellarg($data['employment_status']),
+        escapeshellarg((string)$data['annual_income_usd']),
+        escapeshellarg((string)$data['drinks_per_week']),
+        escapeshellarg((string)$data['age_started_smoking']),
+        escapeshellarg((string)$data['attempts_to_quit_smoking']),
+        escapeshellarg($data['mental_health_status']),
+        escapeshellarg($data['exercise_frequency']),
+        escapeshellarg($data['diet_quality']),
         escapeshellarg((string)$data['sleep_hours']),
-        escapeshellarg((string)$data['mental_health']),
-        escapeshellarg($data['relationship']),
-        escapeshellarg((string)$data['conflicts']),
+        escapeshellarg($data['social_support']),
+        escapeshellarg((string)$data['addict_smoke']),
     ]);
 
     // -W ignore supprime les warnings sklearn (version mismatch)
@@ -65,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     if (!$result) {
         echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
     } else {
-        // Renommer 'erreur' en 'error' si predict.py a renvoyé une exception
+        // Renommer 'erreur' en 'error' si predict_smoke.py a renvoyé une exception
         if (isset($result['erreur'])) {
             echo json_encode(['error' => $result['erreur']]);
         } else {
@@ -80,14 +86,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Addiction Population — AddictData</title>
+    <title>Addiction Population Data — AddictData</title>
     <link rel="stylesheet" href="styles/style_general.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <link rel="stylesheet" href="styles/style_social_addiction.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -96,16 +102,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <!-- ── NAVIGATION ── -->
     <nav class="navbar">
         <div class="nav-inner">
-            <a href="accueil_v2.php" class="nav-logo">
+            <a href="index.php" class="nav-logo">
                 <span class="logo-mark">A</span>
                 <span class="logo-text">ddictData</span>
             </a>
             <ul class="nav-links">
-                <li><a href="accueil_v2.php#presentation">Projet</a></li>
-                <li><a href="accueil_v2.php#datasets">Jeux de données</a></li>
-                <li><a href="accueil_v2.php#equipe">Équipe</a></li>
+                <li><a href="index.php#presentation">Projet</a></li>
+                <li><a href="index.php#datasets">Jeux de données</a></li>
+                <li><a href="index.php#equipe">Équipe</a></li>
             </ul>
-            <span class="nav-badge">Projet Étudiant 2024–2025</span>
+            <span class="nav-badge">Projet Étudiant 2025 – 2026</span>
         </div>
     </nav>
 
@@ -119,33 +125,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         <div class="dataset-hero-inner">
             <div class="dataset-breadcrumb">
-                <a href="accueil_v2.php">Accueil</a>
+                <a href="index.php">Accueil</a>
                 <span class="breadcrumb-sep">/</span>
-                <a href="accueil_v2.php#datasets">Jeux de données</a>
+                <a href="index.php#datasets">Jeux de données</a>
                 <span class="breadcrumb-sep">/</span>
                 <span>Addiction Population</span>
             </div>
 
             <div class="dataset-meta-row">
-                <span class="dataset-icon-badge">🎲</span>
-                <span class="dataset-tag-id">04 · Gambling Addiction</span>
+                <span class="dataset-icon-badge">🚬</span>
+                <span class="dataset-tag-id">04 · Smoke Addiction</span>
             </div>
 
             <h1 class="dataset-hero-title">
-                Addiction<br><em>population alcool</em>
+                Addiction<br><em>population data</em>
             </h1>
 
             <p class="dataset-hero-sub">
-                Profil socio-économique des joueurs compulsifs et facteurs de risque 
-                associés à la dépendance. Une analyse de 3 056 observations pour 
-                mieux comprendre les comportements addictifs liés aux jeux de hasard.
+                Etude de la population générale portant sur les comportements addictifs liés au tabac, analysés à travers des variables socio-démographiques, économiques et comportementales.
             </p>
 
             <div class="dataset-hero-pills">
-                <span class="hero-pill"><span class="hero-pill-dot"></span>3 056 entrées</span>
-                <span class="hero-pill"><span class="hero-pill-dot"></span>Économie &amp; Risque</span>
-                <span class="hero-pill"><span class="hero-pill-dot"></span>Comportement</span>
-                <span class="hero-pill"><span class="hero-pill-dot"></span>Données quantitatives</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>3 000 entrées</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>27 variables</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>Random Forest</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>Données qualitatives & quantitatives</span>
             </div>
         </div>
     </header>
@@ -155,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <div class="page-content">
 
     <!-- Retour -->
-    <a href="accueil_v2.php" class="back-link reveal">
+    <a href="index.php" class="back-link reveal">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
@@ -165,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <!-- Stats bar -->
     <div class="stats-bar reveal">
         <div class="stat-box"><span class="stat-box-num">3000</span><span class="stat-box-label">Personnes</span></div>
-        <div class="stat-box"><span class="stat-box-num">26</span><span class="stat-box-label">Variables</span></div>
+        <div class="stat-box"><span class="stat-box-num">27</span><span class="stat-box-label">Variables</span></div>
         <div class="stat-box"><span class="stat-box-num">0.6301</span><span class="stat-box-label">R² meilleur modèle</span></div>
         <div class="stat-box"><span class="stat-box-num">5</span><span class="stat-box-label">Modèles testés</span></div>
     </div>
@@ -173,31 +177,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <!-- ── 1. PRÉSENTATION DU DATASET ── -->
     <div class="content-block reveal" id="presentation">
         <div class="block-label"><span class="block-label-line"></span>Présentation du dataset</div>
-        <h2 class="block-title">Students Social Media Addiction</h2>
+        <h2 class="block-title">Addiction Population Data</h2>
         <p class="block-text">
-            Ce jeu de données recense <strong>3000 personnes</strong> âgés entre 15 et 79 ans, 
-
+            Ce jeu de données recense <strong>3000 personnes</strong> âgés entre <strong>15 et 79 ans</strong>, issues de pays du monde entier. Il couvre <strong>27 variables</strong> décrivant le profils socio-démographique, les habitudes de vie et les comportements addictifs liés au tabac. 
         </p>
         <p class="block-text">
-            La <strong>variable cible</strong> est l'<code>Addicted_Score</code>, un score d'addiction
-            allant de <strong>2 à 9</strong> qui synthétise le niveau de dépendance numérique de chaque étudiant.
+            La <strong>variable cible</strong> est <code>Smokes_per_day</code>, qui représente le nombre de cigarettes consommées par jour et constitue l'indicateur principal analysé par nos modèles.
         </p>
         <div class="info-grid">
             <div class="info-card">
-                <p class="info-card-title">Variables clés</p>
-                <p class="info-card-text">Âge, genre, niveau académique, pays, heures d'usage quotidien, plateforme principale, impact sur les études, heures de sommeil, score de santé mentale, statut relationnel, conflits liés aux réseaux.</p>
+                <p class="info-card-title">Variables démographiques</p>
+                <p class="info-card-text">nom, age, genre, pays, ville, statut marital, nombre d'enfants.</p>
+            </div>
+            <div class="info-card">
+                <p class="info-card-title">Variables socio-économiques</p>
+                <p class="info-card-text">niveau d'éducation, statut professionnel, revenus annuels.</p>
+            </div>
+            <div class="info-card">
+                <p class="info-card-title">Variables comportementales & santé</p>
+                <p class="info-card-text">bmi, temps de sommeil, fréquence d'exercice, qualité de l'alimentation, état de santé mentale, niveau de soutient social, présence de problèmes de santé.</p>
+            </div>
+            <div class="info-card">
+                <p class="info-card-title">Variables liées à l'addiction</p>
+                <p class="info-card-text">nombre de cigarettes par jour, nombre de verres d'alcool par semaine, âge de début de consommation de tabac, âge de début de consommation d'alcool, nombre de tentative d'arrêt du tabac, nombre de tentative d'arrêt de l'alcool, dépendance au tabac, dépendance à l'alcool.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Variable cible</p>
-                <p class="info-card-text">Score d'addiction (2–9). Il s'agit d'un problème de <strong>régression</strong> : on prédit une valeur numérique continue, non une classe binaire.</p>
+                <p class="info-card-text">Nombre de cigarettes fumées par jour (2–21) constitue un problèe de <strong>régression</strong>, la variable cible étant une valeur numétique continue.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Origine des données</p>
-                <p class="info-card-text">Dataset public issu de Kaggle, compilé à partir d'enquêtes menées auprès d'étudiants de plusieurs universités. Utilisé à des fins strictement pédagogiques.</p>
+                <p class="info-card-text">Dataset généré aléatoirement à l'aide de python à partir de distribution statistiques.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Preprocessing</p>
-                <p class="info-card-text">Variables catégorielles encodées par LabelEncoder et OneHotEncoder. Split 80/20 (564 train / 141 test). ACP testée en complément.</p>
+                <p class="info-card-text">Variables catégorielles encodées par LabelEncoder et traitement des données avec OneHotEncoder et la méthode d'ACP. Split 80/20 (2400 train / 600 test).</p>
             </div>
         </div>
     </div>
@@ -214,43 +228,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <div class="charts-grid">
 
-                <!-- Graphique 1 : Distribution du score d'addiction -->
+                <!-- Graphique 1 : Distribution du nombre de cigarettes fumées par jour -->
                 <div class="chart-card">
-                    <p class="chart-title">Distribution du score d'addiction</p>
+                    <p class="chart-title">Distribution du nombre de cigarettes fumées par jour</p>
                     <div class="chart-canvas-wrap">
                         <canvas id="chartDistribution"></canvas>
                     </div>
                 </div>
 
-                <!-- Graphique 2 : Score moyen par plateforme -->
+                <!-- Graphique 2 : Consommation de cigarettes moyenne par genre -->
                 <div class="chart-card">
-                    <p class="chart-title">Score moyen par plateforme</p>
+                    <p class="chart-title">Consommation moyenne de cigarettes par genre</p>
                     <div class="chart-canvas-wrap">
-                        <canvas id="chartPlateforme"></canvas>
+                        <canvas id="chartGender"></canvas>
                     </div>
                 </div>
 
-                <!-- Graphique 3 : Score moyen par genre -->
+                <!-- Graphique 3 : Tranche de consommation de cigarettes -->
                 <div class="chart-card">
-                    <p class="chart-title">Score d'addiction selon le genre</p>
+                    <p class="chart-title">Tranche de consommation de cigarettes</p>
                     <div class="chart-canvas-wrap">
-                        <canvas id="chartGenre"></canvas>
+                        <canvas id="chartConsommation"></canvas>
                     </div>
                 </div>
 
-                <!-- Graphique 4 : Heures d'usage par niveau académique -->
+                <!-- Graphique 4 : Consommation moyenne de cigarettespar niveau académique -->
                 <div class="chart-card">
-                    <p class="chart-title">Usage quotidien par niveau académique</p>
+                    <p class="chart-title">Consommation moyenne de cigarettes par niveau académique</p>
                     <div class="chart-canvas-wrap">
                         <canvas id="chartNiveau"></canvas>
                     </div>
                 </div>
 
-                <!-- Graphique 5 : Corrélation santé mentale -->
+                <!-- Graphique 5 : Scatter plot âges vs consommation de cigarettes par jour -->
                 <div class="chart-card chart-card-full">
-                    <p class="chart-title">Corrélation : santé mentale & score d'addiction</p>
+                    <p class="chart-title">Scatter plot : âges & consommation de cigarettes par jour</p>
                     <div class="chart-canvas-wrap-lg">
-                        <canvas id="chartCorrelations"></canvas>
+                        <canvas id="chartScatter"></canvas>
                     </div>
                 </div>
 
@@ -265,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <p class="block-text">
             Nous avons testé <strong>5 algorithmes de régression</strong> avec différentes stratégies
             d'encodage (LabelEncoder, OneHotEncoder, ACP). Le meilleur modèle retenu est le
-            <strong>Random Forest (OHE)</strong> avec un R² de 0.9903.
+            <strong>Random Forest (OHE)</strong> avec un R² de 0.6301.
         </p>
 
         <div class="models-grid">
@@ -275,16 +289,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="model-metrics">
                     <div class="metric-row">
                         <span class="metric-label">R²</span>
-                        <span class="metric-value good">0.9903</span>
+                        <span class="metric-value good">0.6301</span>
                     </div>
-                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:99%"></div></div>
+                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:63.01%"></div></div>
                     <div class="metric-row">
                         <span class="metric-label">MAE</span>
-                        <span class="metric-value">0.0374</span>
+                        <span class="metric-value">1.4810</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">RMSE</span>
-                        <span class="metric-value">0.1555</span>
+                        <span class="metric-value">1.9283</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">Encodage</span>
@@ -293,50 +307,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 </div>
             </div>
 
-            <!-- KNN LE -->
-            <div class="model-card">
-                <p class="model-name">KNN</p>
-                <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.9883</span></div>
-                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:98%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.0565</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.1710</span></div>
-                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">LE</span></div>
-                </div>
-            </div>
-
             <!-- XGBoost OHE -->
             <div class="model-card">
                 <p class="model-name">XGBoost</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.9854</span></div>
-                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:98%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.0593</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.1913</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.6248</span></div>
+                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:62.48%"></div></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">1.4890</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">1.9420</span></div>
                     <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">OHE</span></div>
                 </div>
             </div>
 
-            <!-- XGBoost rgs OHE -->
+            <!-- XGBoost RGS OHE -->
             <div class="model-card">
                 <p class="model-name">XGBoost RGS</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.9851</span></div>
-                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:98%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.0482</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.1933</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.6226</span></div>
+                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:62.26%"></div></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">1.5075</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">1.9477</span></div>
                     <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">OHE</span></div>
                 </div>
             </div>
 
-            <!-- Naive Bayes LE -->
+            <!-- Naives Bayes LE -->
             <div class="model-card">
                 <p class="model-name">Naive Bayes</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.9576</span></div>
-                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:95%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.1229</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.3257</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.6041</span></div>
+                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:60.41%"></div></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">1.5275</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">1.9949</span></div>
+                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">LE</span></div>
+                </div>
+            </div>
+
+            <!-- KNN LE -->
+            <div class="model-card">
+                <p class="model-name">KNN</p>
+                <div class="model-metrics">
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.4884</span></div>
+                    <div class="metric-bar-wrap"><div class="metric-bar" style="width:48.84%"></div></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">1.6751</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">2.2676</span></div>
                     <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">LE</span></div>
                 </div>
             </div>
@@ -348,7 +362,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     Le Random Forest construit <strong>plusieurs arbres de décision</strong> sur des
                     sous-ensembles aléatoires des données, puis moyenne leurs prédictions.
                     Il est robuste au surapprentissage et capture bien les interactions non-linéaires
-                    entre variables — idéal pour ce type de score comportemental.
+                    entre variables — idéal pour ce type de prédiction.
                 </p>
             </div>
         </div>
@@ -357,10 +371,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <!-- ── 4. PRÉDICTION ── -->
     <div class="content-block reveal" id="prediction">
         <div class="block-label"><span class="block-label-line"></span>Prédiction personnalisée</div>
-        <h2 class="block-title">Évalue ton score d'addiction</h2>
+        <h2 class="block-title">Évalue ton nombre de cigarettes par jour</h2>
         <p class="block-text">
-            Renseigne ton profil ci-dessous. Le modèle <strong>Random Forest (R² = 0.9903)</strong>
-            prédit ton score d'addiction aux réseaux sociaux sur une échelle de 2 à 9.
+            Renseigne ton profil ci-dessous. Le modèle <strong>Random Forest (R² = 0.6301)</strong>
+            prédit ton nombre de cigarettes consommer par jour et t'indique ta position dans trois classes : Non-fumeur ou très occasionnel (0-4), fumeur modérer (5-14), fumeur intensif (15+).
         </p>
 
         <div class="prediction-section">
@@ -368,9 +382,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="prediction-grid">
 
                     <div class="form-group">
-                        <label class="form-label" for="age">Âge</label>
+                        <label class="form-label" for="age">Age</label>
                         <input class="form-input" type="number" id="age" name="age"
-                               min="15" max="35" value="20" required>
+                               min="15" max="79" value="20" required>
                     </div>
 
                     <div class="form-group">
@@ -383,79 +397,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="academic_level">Niveau académique</label>
-                        <select class="form-select" id="academic_level" name="academic_level">
-                            <option value="Undergraduate" selected>Licence</option>
-                            <option value="Graduate">Master</option>
+                        <label class="form-label" for="education_level">Niveau académique</label>
+                        <select class="form-select" id="education_level" name="education_level">
+                            <option value="Primary">Primaire</option>
+                            <option value="Secondary">Secondaire</option>
                             <option value="High School">Lycée</option>
+                            <option value="College">BTS / DUT</option>
+                            <option value="University" selected>Licence</option>
+                            <option value="Postgraduate">Master / Doctorat</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="country">Pays</label>
-                        <input class="form-input" list="country-list" id="country" name="country"
-                               placeholder="Saisir un pays…" value="France" required autocomplete="off">
-                        <datalist id="country-list">
-                            <?php
-                            $pays = ["Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominican Republic","DR Congo","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saudi Arabia","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Slovenia","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Uganda","UK","Ukraine","UAE","Uruguay","USA","Uzbekistan","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
-                            foreach ($pays as $p) echo "<option value=\"$p\">";
-                            ?>
-                        </datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="avg_daily_hours">Heures d'usage quotidien</label>
-                        <input class="form-input" type="number" id="avg_daily_hours" name="avg_daily_hours"
-                               min="0" max="24" step="0.5" value="3" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="platform">Plateforme principale</label>
-                        <select class="form-select" id="platform" name="platform">
-                            <option value="Instagram" selected>Instagram</option>
-                            <option value="TikTok">TikTok</option>
-                            <option value="YouTube">YouTube</option>
-                            <option value="Twitter">Twitter / X</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="Snapchat">Snapchat</option>
-                            <option value="LinkedIn">LinkedIn</option>
-                            <option value="WhatsApp">WhatsApp</option>
+                        <label class="form-label" for="employment_status">Statut professionnel</label>
+                        <select class="form-select" id="employment_status" name="employment_status">
+                            <option value="Student" selected>Étudiant</option>
+                            <option value="Employed">Employé</option>
+                            <option value="Self-Employed">Auto-entrepreneur</option>
+                            <option value="Unemployed">Sans emploi</option>
+                            <option value="Retired">Retraité</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="affects_perf">Impact sur les études</label>
-                        <select class="form-select" id="affects_perf" name="affects_perf">
-                            <option value="Yes" selected>Oui</option>
-                            <option value="No">Non</option>
+                        <label class="form-label" for="annual_income_usd">Revenus annuels (USD)</label>
+                        <input class="form-input" type="number" id="annual_income_usd" name="annual_income_usd"
+                            min="0" max="200000" step="1000" value="30000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="drinks_per_week">Verres d'alcool par semaine</label>
+                        <input class="form-input" type="number" id="drinks_per_week" name="drinks_per_week"
+                            min="0" max="14" value="3" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="age_started_smoking">Âge de début de tabac</label>
+                        <input class="form-input" type="number" id="age_started_smoking" name="age_started_smoking"
+                            min="5" max="79" value="18" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="attempts_to_quit_smoking">Tentatives d'arrêt du tabac</label>
+                        <input class="form-input" type="number" id="attempts_to_quit_smoking" name="attempts_to_quit_smoking"
+                             min="0" max="20" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="mental_health_status">Santé mentale</label>
+                        <select class="form-select" id="mental_health_status" name="mental_health_status">
+                            <option value="Good" selected>Bonne</option>
+                            <option value="Average">Moyenne</option>
+                            <option value="Poor">Mauvaise</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="exercise_frequency">Fréquence d'exercice</label>
+                        <select class="form-select" id="exercise_frequency" name="exercise_frequency">
+                            <option value="Never" >Jamais</option>
+                            <option value="Rarely">Rarement</option>
+                            <option value="Weekly">Chaque semaine</option>
+                            <option value="Daily" selected>Tous les jours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="diet_quality">Qualité de l'alimentation</label>
+                        <select class="form-select" id="diet_quality" name="diet_quality">
+                            <option value="Poor" selected>Mauvaise</option>
+                            <option value="Average">Moyenne</option>
+                            <option value="Good">Bonne</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="sleep_hours">Heures de sommeil / nuit</label>
                         <input class="form-input" type="number" id="sleep_hours" name="sleep_hours"
-                               min="3" max="12" step="0.5" value="7" required>
+                            min="3" max="12" step="0.5" value="7" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="mental_health">Score santé mentale (1–10)</label>
-                        <input class="form-input" type="number" id="mental_health" name="mental_health"
-                               min="1" max="10" value="6" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="relationship">Statut relationnel</label>
-                        <select class="form-select" id="relationship" name="relationship">
-                            <option value="Single" selected>Célibataire</option>
-                            <option value="In Relationship">En couple</option>
-                            <option value="Complicated">Compliqué</option>
+                        <label class="form-label" for="social_support">Soutien social</label>
+                        <select class="form-select" id="social_support" name="social_support">
+                            <option value="Weak">Faible</option>
+                            <option value="Moderate">Modéré</option>
+                            <option value="Strong">Fort</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label" for="conflicts">Conflits liés aux réseaux (nb/semaine)</label>
-                        <input class="form-input" type="number" id="conflicts" name="conflicts"
-                               min="0" max="10" value="1" required>
+                        <label class="form-label">Pensez-vous être dépendant au tabac ?</label>
+                        <select class="form-select" id="addict_smoke" name="addict_smoke">
+                            <option value="0">Non</option>
+                            <option value="1">Oui</option>
+                        </select>
                     </div>
 
                 </div>
@@ -471,7 +507,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <!-- Résultat -->
             <div class="prediction-result" id="predictionResult">
                 <div class="result-score" id="resultScore">—</div>
-                <div class="result-label">Score prédit / 9</div>
+                <div class="result-label">Nombre de cigarettes prédit </div>
                 <div class="result-level" id="resultLevel">—</div>
                 <div class="result-confidence" id="resultConfidence"></div>
                 <div class="result-bar-wrap">
@@ -486,10 +522,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
                 </div>
 
-                <!-- Conseil professionnel si score élevé -->
+                <!-- Conseil professionnel si nombre élevé -->
                 <div class="pro-advice" id="proAdvice">
-                    <strong> Score élevé détecté ! </strong>
-                    Ton score d'addiction est significativement élevé. Il peut être utile d'en parler à un professionnel de santé mentale (médecin, psychologue ou conseiller universitaire). Des ressources comme <em>Santé Psy Étudiant</em> proposent des consultations gratuites.
+                    <strong> Consommation élevée détectée ! </strong>
+                    </br>Votre niveau de consommation de tabac est significativement élevé. Il peut être utile d'en parler à un professionnel de santé (médecin généraliste, tabacologue ou pharmacien). Des ressources comme <em>Tabac Info Service</em> (3989) propose un accompagnement gratuit et confidentiel pour vous aider à réduire ou arrêter de fumer. N'hésitez pas à les contacter pour bénéficier de conseils personnalisés et de soutient dans votre démarche.
                 </div>
             </div>
 
@@ -524,14 +560,14 @@ const chartDefaults = {
     }
 };
 
-// 1 — Distribution du score d'addiction (histogramme)
+// 1 — Distribution du nombre de cigarettes fumées par jour (histogramme)
 new Chart(document.getElementById('chartDistribution'), {
     type: 'bar',
     data: {
-        labels: ['2','3','4','5','6','7','8','9'],
+        labels: ['2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21'],
         datasets: [{
-            data: [18, 42, 78, 112, 143, 138, 98, 76],
-            backgroundColor: 'rgba(45,47,61,0.75)',
+            data: [6, 23, 54, 105, 184, 243, 352, 409, 357, 361, 290, 203, 178, 94, 59, 33, 34, 5, 6, 4],
+            backgroundColor: 'rgba(201, 66, 66, 0.75)',
             borderRadius: 6,
             hoverBackgroundColor: 'rgba(45,47,61,1)',
         }]
@@ -540,27 +576,25 @@ new Chart(document.getElementById('chartDistribution'), {
         ...chartDefaults,
         plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} étudiants` } }
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} individus` } }
         },
         scales: {
             ...chartDefaults.scales,
-            y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb étudiants', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb d\'individus', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
+            x: { ...chartDefaults.scales.x, title: { display: true, text: 'Nb de cigarettes fumées par jour', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
         }
     }
 });
 
-// 2 — Score moyen par plateforme
-new Chart(document.getElementById('chartPlateforme'), {
+// 2 — moyenne de cigarette fumée par jour par genre
+new Chart(document.getElementById('chartGender'), {
     type: 'bar',
     data: {
-        labels: ['TikTok','Instagram','Snapchat','YouTube','Facebook','WhatsApp','Twitter','LinkedIn'],
+        labels: ['Female', 'Male', 'Other'],
         datasets: [{
-            data: [6.4, 6.1, 5.8, 5.3, 5.1, 4.9, 4.6, 4.1],
+            data: [10.18, 10.01, 9.90],
             backgroundColor: [
-                'rgba(239,68,68,0.75)','rgba(239,68,68,0.6)','rgba(251,146,60,0.7)',
-                'rgba(251,146,60,0.55)','rgba(45,47,61,0.5)','rgba(45,47,61,0.4)',
-                'rgba(45,47,61,0.3)','rgba(45,47,61,0.2)'
-            ],
+                'rgba(201, 66, 66, 0.75)','rgba(209, 221, 43, 0.7)','rgba(167,139,250,0.7)'],
             borderRadius: 6,
         }]
     },
@@ -568,21 +602,21 @@ new Chart(document.getElementById('chartPlateforme'), {
         ...chartDefaults,
         indexAxis: 'y',
         scales: {
-            x: { ...chartDefaults.scales.x, min: 0, max: 9, title: { display: true, text: 'Score moyen', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
+            x: { ...chartDefaults.scales.x, min: 0, max: 9, title: { display: true, text: 'NB de cigarettes moyennes', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
             y: { ...chartDefaults.scales.y }
         }
     }
 });
 
-// 3 — Score moyen par genre
-new Chart(document.getElementById('chartGenre'), {
+// 3 —Tranche de consommation
+new Chart(document.getElementById('chartConsommation'), {
     type: 'bar',
     data: {
-        labels: ['Homme', 'Femme', 'Non-binaire'],
+        labels: ['Faible','Moyen','Élevé'],
         datasets: [{
-            label: 'Score moyen',
-            data: [5.5, 5.3, 5.6],
-            backgroundColor: ['rgba(96,165,250,0.7)','rgba(244,114,182,0.7)','rgba(167,139,250,0.7)'],
+            label: 'consommation moyenne',
+            data: [188,1545,1267],
+            backgroundColor: ['rgba(201, 66, 66, 0.75)','rgba(209, 221, 43, 0.7)','rgba(167,139,250,0.7)'],
             borderRadius: 8,
             barPercentage: 0.5,
         }]
@@ -591,7 +625,7 @@ new Chart(document.getElementById('chartGenre'), {
         ...chartDefaults,
         plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Score moyen: ${ctx.parsed.y}` } }
+            tooltip: { callbacks: { label: ctx => ` NB de personnes: ${ctx.parsed.y}` } }
         },
         scales: {
             ...chartDefaults.scales,
@@ -600,28 +634,26 @@ new Chart(document.getElementById('chartGenre'), {
     }
 });
 
-// 4 — Heures d'usage par niveau académique
+// 4 — Moyenne de consommation par niveau académique
 new Chart(document.getElementById('chartNiveau'), {
     type: 'bar',
     data: {
-        labels: ['Lycée', 'Licence', 'Master'],
+        labels: ['College', 'High School', 'Postgraduate', 'Primary', 'Secondary', 'University'],
         datasets: [{
-            label: 'Médiane (h/j)',
-            data: [5.5, 4.8, 4.5],
-            backgroundColor: 'rgba(45,47,61,0.75)',
+            data: [10.09, 10.18, 9.91, 10.15, 9.86, 9.91],
+            backgroundColor: 'rgba(201, 66, 66, 0.75)',
             borderRadius: 6,
-            barPercentage: 0.4,
         }]
     },
     options: {
         ...chartDefaults,
         plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} h/jour` } }
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} cig/j` } }
         },
         scales: {
             ...chartDefaults.scales,
-            y: { ...chartDefaults.scales.y, title: { display: true, text: 'Heures / jour', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            y: { ...chartDefaults.scales.y, title: { display: true, text: 'cigarettes / jour', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
         }
     }
 });
@@ -629,47 +661,76 @@ new Chart(document.getElementById('chartNiveau'), {
 // 5 — Corrélations : santé mentale & performance académique
 // Données : score moyen d'addiction par tranche de mental_health (1-10)
 // et par impact sur les études (Oui/Non)
-new Chart(document.getElementById('chartCorrelations'), {
-    type: 'line',
+new Chart(document.getElementById('chartScatter'), {
+    type: 'scatter',
     data: {
-        labels: ['2','3','4','5','6','7','8','9'],
-        datasets: [{
-            label: 'Santé mentale moyenne',
-            data: [9.0, 8.0, 8.0, 7.1, 6.8, 5.9, 5.2, 4.5],
-            borderColor: 'rgba(239,68,68,0.85)',
-            backgroundColor: 'rgba(239,68,68,0.06)',
-            borderWidth: 2.5,
-            pointBackgroundColor: 'rgba(239,68,68,0.85)',
-            pointRadius: 5,
-            pointHoverRadius: 7,
-            tension: 0,
-            fill: false,
+        datasets : [{
+            label: 'Age vs cigarettes fumées/jour',
+            data: [
+                {x: 66, y:5},{x:29, y:11},{x:75, y:13},{x:35, y:7},{x:38, y:8},
+                {x:17, y:6},{x:36, y:9},{x:67, y:8},{x:16, y:8},{x:44, y:7},
+                {x:52, y:12},{x:16, y:10},{x:78, y:10},{x:74, y:10},{x:35, y:10},
+                {x:47, y:10},{x:72, y:11},{x:36, y:13},{x:63, y:8},{x:73, y:9}
+            ],
+            backgroundColor: [
+                'rgba(244,114,182,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(244,114,182,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(255,206,86,0.7)',
+                'rgba(255,206,86,0.7)' 
+            ],
+            pointRadius: 6,
         }]
     },
     options: {
         ...chartDefaults,
+        scales: {
+            x: {
+                ...chartDefaults.scales.x,
+                title: { display: true, text: 'Age', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+            },
+            y: {
+                ...chartDefaults.scales.y,
+                title: { display: true, text: 'Cigarettes/jour', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+            }
+        },
         plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Santé mentale : ${ctx.parsed.y}` } }
-        },
-        scales: {
-            x: { ...chartDefaults.scales.x, title: { display: true, text: "Score d'addiction", font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
-            y: { ...chartDefaults.scales.y, min: 0, max: 10, title: { display: true, text: 'Santé mentale (moyenne)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            tooltip: {
+                callbacks: {
+                    label: ctx => `Âge: ${ctx.raw.x}, Cig/jour: ${ctx.raw.y}`
+                }
+            }
         }
     }
 });
 
 // ── Graphique de positionnement du résultat ──────────────
 let resultPositionChart = null;
-const distData = [18, 42, 78, 112, 143, 138, 98, 76];
-const distLabels = ['2','3','4','5','6','7','8','9'];
+const distData = [6,23,54,105,184,243,352,409,357,361,290,203,178,94,59,33,34,5,6,4];
+const distLabels = ['2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21'];
 
 function updateResultPositionChart(userScore) {
     const scoreRounded = Math.round(userScore);
     const colors = distLabels.map((l, i) => {
         const val = i + 2;
         return Math.abs(val - scoreRounded) <= 0.5
-            ? 'rgba(239,68,68,0.85)'
+            ? 'rgba(201, 66, 66, 0.75)'
             : 'rgba(45,47,61,0.55)';
     });
 
@@ -691,11 +752,11 @@ function updateResultPositionChart(userScore) {
                 ...chartDefaults,
                 plugins: {
                     legend: { display: false },
-                    tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} étudiants` } }
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} individus` } }
                 },
                 scales: {
                     x: { ...chartDefaults.scales.x },
-                    y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb étudiants', font: { size: 9, family: 'DM Mono' }, color: '#aaa' } }
+                    y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb d\'individus', font: { size: 9, family: 'DM Mono' }, color: '#aaa' } }
                 }
             }
         });
@@ -734,7 +795,7 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
     formData.append('action', 'predict');
 
     try {
-        const response = await fetch('social_addiction.php', {
+        const response = await fetch('addiction_population.php', {
             method: 'POST',
             body: formData
         });
@@ -745,14 +806,14 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
             document.getElementById('predictionError').style.display = 'block';
         } else {
             const score   = parseFloat(data.score).toFixed(2);
-            const pct     = ((score - 2) / 7 * 100).toFixed(0);
-            const r2 = data.fiabilite !== undefined ? data.fiabilite : '99';
-
+            const pct     = ((score - 2) / (21 - 2) * 100).toFixed(0);
+            const r2 = 'R² = 0.63';
+            document.getElementById('resultConfidence').textContent = `Fiabilité du modèle : ${r2}`;
             // Niveau
             let level = '', levelClass = '';
-            if (score < 4.5)      { level = 'Niveau faible';  levelClass = 'low'; }
-            else if (score < 6.5) { level = 'Niveau modéré';  levelClass = 'medium'; }
-            else                   { level = 'Niveau élevé';   levelClass = 'high'; }
+            if (score <= 5)      { level = 'Non-fumeur ou très occasionnel';  levelClass = 'low'; }
+            else if (score <= 15) { level = 'Fumeur modéré';  levelClass = 'medium'; }
+            else                   { level = 'Fumeur intensif';   levelClass = 'high'; }
 
             document.getElementById('resultScore').textContent      = score;
             document.getElementById('resultLevel').textContent      = level;
@@ -770,9 +831,9 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
             // Graphique de positionnement
             setTimeout(() => updateResultPositionChart(parseFloat(score)), 100);
 
-            // Conseil professionnel si score ≥ 7
+            // Conseil professionnel si score ≥ 10
             const advice = document.getElementById('proAdvice');
-            advice.style.display = parseFloat(score) >= 7 ? 'block' : 'none';
+            advice.style.display = parseFloat(score) >= 10 ? 'block' : 'none';
         }
     } catch (err) {
         document.getElementById('predictionError').textContent = 'Impossible de joindre le serveur.';
@@ -783,6 +844,5 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
     btn.disabled = false;
 });
 </script>
-
 </body>
 </html>
