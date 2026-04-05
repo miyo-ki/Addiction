@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             Addiction à <em>l'alcool</em><br>chez les étudiants
         </h1>
         <p class="dataset-hero-sub">
-            Étude sur la consommation d'alcool quotidienne d'étudiants portugais en mathématiques,
+            Étude sur la consommation d'alcool quotidienne d'étudiants en mathématiques,
             croisée avec leurs résultats scolaires, leur vie sociale et leur contexte familial.
             <BR>Besoin d'aide ? Consulter ce <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">site</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
         </p>

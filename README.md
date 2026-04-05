@@ -14,7 +14,7 @@ Enfin, nous avons repéré pour chaque jeu de données les modèles avec les mei
 
 
 Voici le lien de notre site :
-
+https://addiction.rf.gd/?i=1
 
 Voici le lien de nos jeux de données :
 
