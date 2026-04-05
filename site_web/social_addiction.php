@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="styles/style_social_addiction.css">
+    <link rel="stylesheet" href="styles/style_jdd.css">
 
 </head>
 <body>
@@ -96,18 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
     <div class="nav-inner">
-        <a href="accueil.php" class="nav-logo">
+        <a href="index.php" class="nav-logo">
             <span class="logo-text">AddictData</span>
         </a>
         <ul class="nav-links">
-            <li><a href="accueil_v2.php">Accueil</a></li>
+            <li><a href="index.php">Accueil</a></li>
             <li class="nav-dropdown">
                 <a href="#">Datasets ▾</a>
                 <ul class="nav-dropdown-menu">
-                    <li><a href="social_addiction.php" class="active">Réseaux sociaux</a></li>
-                    <li><a href="addiction_population.php">Addiction population</a></li>
-                    <li><a href="mobile_addiction.php">Mobile addiction</a></li>
-                    <li><a href="student-mat.php">Student performance</a></li>
+                    <li><a href="social_addiction.php" class="active">Social Addiction</a></li>
+                    <li><a href="addiction_population.php">Smoke Addiction</a></li>
+                    <li><a href="mobile_addiction.php">Mobile Addiction</a></li>
+                    <li><a href="student-mat.php">Alcool Addiction</a></li>
                 </ul>
             </li>
         </ul>
@@ -123,14 +123,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </div>
     <div class="dataset-hero-inner">
         <div class="dataset-breadcrumb">
-            <a href="accueil.php">Accueil</a>
+            <a href="index.php">Accueil</a>
             <span class="breadcrumb-sep">/</span>
-            <a href="accueil.php#datasets">Jeux de données</a>
+            <a href="index.php#datasets">Jeux de données</a>
             <span class="breadcrumb-sep">/</span>
             <span>Réseaux Sociaux</span>
         </div>
         <div class="dataset-meta-row">
-            <span class="dataset-icon-badge">📱</span>
+            <span class="dataset-icon-badge">💬</span>
             <span class="dataset-tag-id">01 · Social Addiction</span>
         </div>
         <h1 class="dataset-hero-title">
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <div class="page-content">
 
     <!-- Retour -->
-    <a href="accueil_v2.php" class="back-link reveal">
+    <a href="index.php" class="back-link reveal">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
@@ -507,7 +507,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="footer-inner">
         <p class="footer-logo">AddictData</p>
         <p class="footer-copy">
-            Projet universitaire — Science des données 4  &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; L3 MIASHS Université Paul Valéry Montpellier &nbsp;·&nbsp;
+            Projet universitaire — L3 MIASHS Université Paul Valéry Montpellier &nbsp;·&nbsp; 2025–2026 &nbsp;·&nbsp; 
             Données à usage strictement pédagogique.
         </p>
     </div>

@@ -93,60 +93,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 <div class="noise"></div>
 
-<!-- ── NAVBAR ── -->
-<nav class="navbar">
-    <div class="nav-inner">
-        <a href="accueil.php" class="nav-logo">
-            <span class="logo-text">AddictData</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="accueil_v2.php">Accueil</a></li>
-            <li class="nav-dropdown">
-                <a href="#">Datasets ▾</a>
-                <ul class="nav-dropdown-menu">
-                    <li><a href="social_addiction.php" class="active">Addiction population</a></li>
-                    <li><a href="addiction_population.php">Réseaux sociaux</a></li>
-                    <li><a href="mobile_addiction.php">Mobile addiction</a></li>
-                    <li><a href="student-mat.php">Student performance</a></li>Réseaux sociaux
-                </ul>
-            </li>
-        </ul>
-    </div>
-</nav>
+    <!-- ── NAVIGATION ── -->
+    <nav class="navbar">
+        <div class="nav-inner">
+            <a href="accueil_v2.php" class="nav-logo">
+                <span class="logo-mark">A</span>
+                <span class="logo-text">ddictData</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="accueil_v2.php#presentation">Projet</a></li>
+                <li><a href="accueil_v2.php#datasets">Jeux de données</a></li>
+                <li><a href="accueil_v2.php#equipe">Équipe</a></li>
+            </ul>
+            <span class="nav-badge">Projet Étudiant 2024–2025</span>
+        </div>
+    </nav>
 
-<!-- ── HERO ── -->
-<header class="dataset-hero">
-    <div class="hero-grid-lines" aria-hidden="true">
-        <?php for ($i = 0; $i < 6; $i++): ?>
-        <div class="grid-line"></div>
-        <?php endfor; ?>
-    </div>
-    <div class="dataset-hero-inner">
-        <div class="dataset-breadcrumb">
-            <a href="accueil.php">Accueil</a>
-            <span class="breadcrumb-sep">/</span>
-            <a href="accueil.php#datasets">Jeux de données</a>
-            <span class="breadcrumb-sep">/</span>
-            <span>Addiction population</span>
+    <!-- ── HERO ── -->
+    <header class="dataset-hero">
+        <div class="hero-grid-lines" aria-hidden="true">
+            <?php for ($i = 0; $i < 6; $i++): ?>
+            <div class="grid-line"></div>
+            <?php endfor; ?>
         </div>
-        <div class="dataset-meta-row">
-            <span class="dataset-icon-badge">📱</span>
-            <span class="dataset-tag-id">04 · Addiction Population</span>
+
+        <div class="dataset-hero-inner">
+            <div class="dataset-breadcrumb">
+                <a href="accueil_v2.php">Accueil</a>
+                <span class="breadcrumb-sep">/</span>
+                <a href="accueil_v2.php#datasets">Jeux de données</a>
+                <span class="breadcrumb-sep">/</span>
+                <span>Addiction Population</span>
+            </div>
+
+            <div class="dataset-meta-row">
+                <span class="dataset-icon-badge">🎲</span>
+                <span class="dataset-tag-id">04 · Gambling Addiction</span>
+            </div>
+
+            <h1 class="dataset-hero-title">
+                Addiction<br><em>population alcool</em>
+            </h1>
+
+            <p class="dataset-hero-sub">
+                Profil socio-économique des joueurs compulsifs et facteurs de risque 
+                associés à la dépendance. Une analyse de 3 056 observations pour 
+                mieux comprendre les comportements addictifs liés aux jeux de hasard.
+            </p>
+
+            <div class="dataset-hero-pills">
+                <span class="hero-pill"><span class="hero-pill-dot"></span>3 056 entrées</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>Économie &amp; Risque</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>Comportement</span>
+                <span class="hero-pill"><span class="hero-pill-dot"></span>Données quantitatives</span>
+            </div>
         </div>
-        <h1 class="dataset-hero-title">
-            Addiction au<br><em>tabac</em>
-        </h1>
-        <p class="dataset-hero-sub">
-            Analyse du profil socio-économique et comportementale d'individus âgés de 15 à 79 ans et l'impact sur leur consommation de tabac.
-        </p>
-        <div class="dataset-hero-pills">
-            <span class="hero-pill"><span class="hero-pill-dot"></span>3000 personnes</span>
-            <span class="hero-pill"><span class="hero-pill-dot"></span>26 variables</span>
-            <span class="hero-pill"><span class="hero-pill-dot"></span>Régression · nombre de cigarettes fumées / jour</span>
-            <span class="hero-pill"><span class="hero-pill-dot"></span>R² = 0.6301</span>
-        </div>
-    </div>
-</header>
+    </header>
 
 <!-- ── MAIN ── -->
 <main>

@@ -85,7 +85,7 @@ $members = [
                 <li><a href="#datasets">Jeux de données</a></li>
                 <li><a href="#equipe">Équipe</a></li>
             </ul>
-            <span class="nav-badge">Projet Étudiant 2025–2026</span>
+            <span class="nav-badge">Projet Étudiant 2024–2025</span>
         </div>
     </nav>
 
@@ -98,7 +98,7 @@ $members = [
         </div>
         <div class="hero-content">
             <p class="hero-eyebrow">
-                <span class="dot"></span> Analyse des données 4 · Licence 3 MIASHS · 2025–2026
+                <span class="dot"></span> Analyse de données · IUT Informatique · 2024–2025
             </p>
             <h1 class="hero-title">
                 Comprendre<br>
@@ -114,7 +114,7 @@ $members = [
                 <a href="#presentation" class="btn btn-ghost">En savoir plus</a>
             </div>
         </div>
-        <div class="hero-stats">
+        <div class="hero-stats" aria-hidden="true">
             <div class="stat-pill">
                 <span class="stat-num">4</span>
                 <span class="stat-label">Jeux de données</span>
@@ -128,8 +128,7 @@ $members = [
                 <span class="stat-label">Membres</span>
             </div>
         </div>
-        <div class="hero-stats"></div>
-        <div class="hero-scroll-hint">
+        <div class="hero-scroll-hint" aria-hidden="true">
             <span>Défiler</span>
             <div class="scroll-line"></div>
         </div>
@@ -150,7 +149,7 @@ $members = [
                     <p class="pres-text">
                         Dans le cadre de notre formation en <strong>informatique et science des données</strong>, 
                         nous avons choisi d'explorer un sujet aux ramifications médicales, sociales et économiques 
-                        profondes: <strong>l'addiction</strong>.
+                        profondes&nbsp;: <strong>l'addiction</strong>.
                     </p>
                     <p class="pres-text">
                         Ce projet analyse quatre types de dépendance — aux réseaux sociaux, aux substances 
@@ -159,7 +158,7 @@ $members = [
                         <strong>modélisation prédictive</strong>.
                     </p>
                     <p class="pres-text">
-                        Notre objectif: identifier des patterns comportementaux, des facteurs de risque 
+                        Notre objectif&nbsp;: identifier des patterns comportementaux, des facteurs de risque 
                         et proposer des représentations visuelles exploitables pour sensibiliser à ces problématiques.
                     </p>
                     <div class="pres-methods">
@@ -197,7 +196,7 @@ $members = [
                             <span class="tag"><?= $tag ?></span>
                             <?php endforeach; ?>
                         </div>
-                    </div>
+                    </div>x
                     <div class="card-footer">
                         <span class="card-entries"><?= $ds['entries'] ?></span>
                         <a href="<?= $ds['file'] ?>" class="card-link">
@@ -220,7 +219,7 @@ $members = [
                 <span class="label-line"></span>
                 <span>L'Équipe</span>
             </div>
-            <h2 class="section-title">Qui sommes-nous ?</h2>
+            <h2 class="section-title">Qui sommes-nous&nbsp;?</h2>
             <div class="team-grid">
                 <?php foreach ($members as $i => $m): ?>
                 <div class="team-card">
@@ -242,7 +241,7 @@ $members = [
         <div class="footer-inner">
             <p class="footer-logo">AddictData</p>
             <p class="footer-copy">
-                Projet universitaire — Licence 3 Miashs · 2025–2026 · 
+                Projet universitaire — IUT Informatique &nbsp;·&nbsp; 2024–2025 &nbsp;·&nbsp; 
                 Données à usage strictement pédagogique.
             </p>
         </div>

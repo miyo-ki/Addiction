@@ -4,7 +4,7 @@
         .nav-dropdown-menu {
             display: none;
             position: absolute;
-            top: calc(100% + 0.1rem);
+            top: calc(100%);
             left: 50%;
             transform: translateX(-50%);
             background: var(--bg-card, #fff);
