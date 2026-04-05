@@ -69,7 +69,7 @@ $members = [
     <!-- ── NAVIGATION ── -->
     <nav class="navbar">
         <div class="nav-inner">
-            <a href="accueil.php" class="nav-logo">
+            <a href="index.php" class="nav-logo">
                 <span class="logo-text">AddictData</span>
             </a>
             <ul class="nav-links">

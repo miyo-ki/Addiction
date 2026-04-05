@@ -96,11 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <!-- ── NAVBAR ── -->
 <nav class="navbar">
     <div class="nav-inner">
-        <a href="accueil.php" class="nav-logo">
+        <a href="index.php" class="nav-logo">
             <span class="logo-text">AddictData</span>
         </a>
         <ul class="nav-links">
-            <li><a href="accueil.php">Accueil</a></li>
+            <li><a href="index.php">Accueil</a></li>
             <li class="nav-dropdown">
                 <a href="#">Datasets ▾</a>
                 <ul class="nav-dropdown-menu">
@@ -123,9 +123,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     </div>
     <div class="dataset-hero-inner">
         <div class="dataset-breadcrumb">
-            <a href="accueil.php">Accueil</a>
+            <a href="index.php">Accueil</a>
             <span class="breadcrumb-sep">/</span>
-            <a href="accueil.php#datasets">Jeux de données</a>
+            <a href="index.php#datasets">Jeux de données</a>
             <span class="breadcrumb-sep">/</span>
             <span>Réseaux Sociaux</span>
         </div>
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 <div class="page-content">
 
     <!-- Retour -->
-    <a href="accueil.php" class="back-link reveal">
+    <a href="index.php" class="back-link reveal">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
