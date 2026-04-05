@@ -1,3 +1,4 @@
+
 import joblib
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
@@ -5,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
+
 
 print("fff")
 df = pd.read_csv("BDD_initial/student-mat.csv", sep=",", index_col=0)

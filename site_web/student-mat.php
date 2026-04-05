@@ -559,9 +559,9 @@ const chartDefaults = {
 new Chart(document.getElementById('chartDistribution'), {
     type: 'bar',
     data: {
-        labels: ['1 — Très faible', '2 — Faible', '3 — Modéré', '4 — Élevé', '5 — Très élevé'],
+        labels: ['1', '2', '3', '4', '5'],
         datasets: [{
-            data: [130, 115, 74, 50, 26],
+            data: [276, 75, 26, 9, 9],
             backgroundColor: [
                 'rgba(45,47,61,0.35)',
                 'rgba(45,47,61,0.50)',
