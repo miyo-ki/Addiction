@@ -32,48 +32,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $data[$k] = $val;
     }
 
-    // Chemin vers predict.py — même dossier que social_addiction.php
-    $predict_script = __DIR__ . '/predict.py';
-    $python         = 'py'; // Windows MAMP
+    // ── Appel à l'API Render (remplace shell_exec + predict.py) ──
+    $api_url = 'https://addiction-api.onrender.com/predict/social';
 
-    // predict.py attend les 11 valeurs comme arguments positionnels
-    // dans l'ordre exact de feature_names (cf. notebook)
-    $args = implode(' ', [
-        escapeshellarg((string)$data['age']),
-        escapeshellarg($data['gender']),
-        escapeshellarg($data['academic_level']),
-        escapeshellarg($data['country']),
-        escapeshellarg((string)$data['avg_daily_hours']),
-        escapeshellarg($data['platform']),
-        escapeshellarg($data['affects_perf']),
-        escapeshellarg((string)$data['sleep_hours']),
-        escapeshellarg((string)$data['mental_health']),
-        escapeshellarg($data['relationship']),
-        escapeshellarg((string)$data['conflicts']),
+    $payload = json_encode([
+        'Age'                          => (float)$data['age'],
+        'Gender'                       => $data['gender'],
+        'Academic_Level'               => $data['academic_level'],
+        'Country'                      => $data['country'],
+        'Avg_Daily_Usage_Hours'        => (float)$data['avg_daily_hours'],
+        'Most_Used_Platform'           => $data['platform'],
+        'Affects_Academic_Performance' => $data['affects_perf'],
+        'Sleep_Hours_Per_Night'        => (float)$data['sleep_hours'],
+        'Mental_Health_Score'          => (float)$data['mental_health'],
+        'Relationship_Status'          => $data['relationship'],
+        'Conflicts_Over_Social_Media'  => (float)$data['conflicts'],
     ]);
 
-    // -W ignore supprime les warnings sklearn (version mismatch)
-    // qui polluaient stdout et cassaient le JSON
-    $cmd    = "$python -W ignore " . escapeshellarg($predict_script) . " $args 2>&1";
-    $output = trim(shell_exec($cmd));
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_TIMEOUT,        30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    $curl_err = curl_error($ch);
+    curl_close($ch);
 
-    // Extraire uniquement la dernière ligne (le JSON)
-    $lines  = explode("\n", $output);
-    $last   = trim(end($lines));
+    if ($curl_err) {
+        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $curl_err]);
+        exit;
+    }
 
-    $result = json_decode($last, true);
+    $result = json_decode($response, true);
     if (!$result) {
-        echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
+        echo json_encode(['error' => 'Réponse invalide de l\'API', 'raw' => $response]);
+    } elseif (isset($result['erreur'])) {
+        echo json_encode(['error' => $result['erreur']]);
     } else {
-        // Renommer 'erreur' en 'error' si predict.py a renvoyé une exception
-        if (isset($result['erreur'])) {
-            echo json_encode(['error' => $result['erreur']]);
-        } else {
-            echo json_encode($result);
-        }
+        echo json_encode($result);
     }
     exit;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
