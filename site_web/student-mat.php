@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="stats-bar reveal">
         <div class="stat-box"><span class="stat-box-num">395</span><span class="stat-box-label">Étudiants</span></div>
         <div class="stat-box"><span class="stat-box-num">14</span><span class="stat-box-label">Variables</span></div>
-        <div class="stat-box"><span class="stat-box-num">0.0913</span><span class="stat-box-label">Accuracy meilleur modèle</span></div>
+        <div class="stat-box"><span class="stat-box-num">0.0913</span><span class="stat-box-label">R² du meilleur modèle</span></div>
         <div class="stat-box"><span class="stat-box-num">5</span><span class="stat-box-label">Modèles testés</span></div>
     </div>
 
@@ -263,10 +263,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="block-label"><span class="block-label-line"></span>Modèles d'IA</div>
         <h2 class="block-title">Comparaison des modèles entraînés</h2>
         <p class="block-text">
-            Nous avons testé <strong>5 algorithmes de classification</strong> avec différentes stratégies
-            d'encodage (LabelEncoder, OneHotEncoder, ACP). Le déséquilibre des classes (majorité Dalc=1)
-            rend la tâche difficile. Le meilleur modèle retenu est le
-            <strong>Random Forest (OHE)</strong> avec une accuracy de 0.62.
+            Nous avons testé <strong>5 algorithmes de classification et régression</strong> avec différentes stratégies
+            d'encodage (LabelEncoder, OneHotEncoder, ACP). Cependant, notre jeu de donnée étant généré aléatoirement, nos modèles ne peuvent expliquer la variance que très faiblement. De plus, le déséquilibre des classes (majorité Dalc=1)
+            rend tout apprentissage à nuancer. Le meilleur modèle retenu est le
+            <strong>KNN (LE)</strong> avec une R² de 0.0913.
         </p>
 
         <div class="models-grid">
@@ -344,12 +344,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <!-- Explication -->
             <div class="info-card" style="border-left: none;">
-                <p class="info-card-title">Pourquoi Random Forest ?</p>
+                <p class="info-card-title">Pourquoi KNN ?</p>
                 <p class="info-card-text">
-                    Le Random Forest agrège plusieurs arbres de décision entraînés sur des sous-ensembles
-                    aléatoires. Il gère bien le déséquilibre des classes (Dalc = 1 majoritaire) et capture
-                    les interactions non-linéaires entre variables sociales, familiales et scolaires.
-                </p>
+                    L’algorithme des k plus proches voisins (KNN) est un classificateur d’apprentissage non paramétrique et supervisé qui s’appuie sur la notion de proximité pour réaliser des classifications ou des prédictions sur le regroupement d’un point de données.                </p>
             </div>
         </div>
     </div>
@@ -359,8 +356,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="block-label"><span class="block-label-line"></span>Prédiction personnalisée</div>
         <h2 class="block-title">Évalue ton niveau de consommation</h2>
         <p class="block-text">
-            Renseigne ton profil ci-dessous. Le modèle <strong>Random Forest (Accuracy = 0.62)</strong>
-            prédit ton niveau de consommation d'alcool en semaine sur une échelle de 1 à 5.
+            Renseigne ton profil ci-dessous. Le modèle <strong>KNN</strong>
+            prédit ton niveau de consommation d'alcool journalier sur une échelle de 1 à 5.
         </p>
 
         <div class="prediction-section">
