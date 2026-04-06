@@ -346,7 +346,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="info-card" style="border-left: none;">
                 <p class="info-card-title">Pourquoi KNN ?</p>
                 <p class="info-card-text">
-                    L’algorithme des k plus proches voisins (KNN) est un classificateur d’apprentissage non paramétrique et supervisé qui s’appuie sur la notion de proximité pour réaliser des classifications ou des prédictions sur le regroupement d’un point de données.                </p>
+                    Nos analyses ont repérés que les meilleurs paramètres étaient les suivants : 15 voisins en distance euclidienne avec l'encodage LabelEncoder.
+                    L’algorithme des k plus proches voisins (KNN) est un classificateur d’apprentissage non paramétrique et supervisé qui s’appuie sur la notion de proximité pour réaliser des classifications ou des prédictions sur le regroupement d’un point de données.                
+                </p>
             </div>
         </div>
     </div>

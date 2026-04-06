@@ -16,7 +16,7 @@ app = FastAPI()
 # Autorise les appels depuis PHP en local
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://addiction.rf.gd", "http://addiction.rf.gd"],
     allow_methods=["POST"],
     allow_headers=["*"],
 )
