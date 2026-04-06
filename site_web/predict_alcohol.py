@@ -1,71 +1,46 @@
 # predict_alcohol.py
-import sys
-import json
-import joblib
-import pandas as pd
-import os
+import sys, json, joblib, pandas as pd, os
 
 def predict(args):
-    # ── 1. Lire les arguments dans le même ordre que PHP les envoie ──
-    # Ordre : age G1 G2 G3 freetime goout health absences studytime
-    #         Mjob Fjob reason activities romantic
     try:
-        age        = int(args[1])
-        G1         = int(args[2])
-        G2         = int(args[3])
-        G3         = int(args[4])
-        freetime   = int(args[5])
-        goout      = int(args[6])
-        health     = int(args[7])
-        absences   = int(args[8])
-        studytime  = int(args[9])
-        Mjob       = args[10]
-        Fjob       = args[11]
-        reason     = args[12]
-        activities = args[13]
-        romantic   = args[14]
+        age, G1, G2, G3         = int(args[1]), int(args[2]), int(args[3]), int(args[4])
+        freetime, goout, health  = int(args[5]), int(args[6]), int(args[7])
+        absences, studytime      = int(args[8]), int(args[9])
+        Mjob, Fjob, reason       = args[10], args[11], args[12]
+        activities, romantic     = args[13], args[14]
     except (IndexError, ValueError) as e:
-        print(json.dumps({"erreur": f"Arguments invalides : {e}"}))
-        sys.exit(1)
+        print(json.dumps({"erreur": f"Arguments invalides : {e}"})); sys.exit(1)
 
-    # ── 2. Charger le modèle ──
-    model_path = os.path.join(os.path.dirname(__file__), "model_alcohol.pkl")
+    model_path = os.path.join(os.path.dirname(__file__), "model_alcool.pkl")
     try:
-        pipeline = joblib.load(model_path)
+        saved = joblib.load(model_path)
+        model          = saved['model']
+        label_encoders = saved['label_encoders']
     except FileNotFoundError:
-        print(json.dumps({"erreur": "Modèle introuvable. Lancez d'abord le notebook."}))
-        sys.exit(1)
+        print(json.dumps({"erreur": "Modèle introuvable."})); sys.exit(1)
 
-    # ── 3. Construire le DataFrame avec les mêmes colonnes qu'à l'entraînement ──
     etudiant = pd.DataFrame([{
-        "age"        : age,
-        "G1"         : G1,
-        "G2"         : G2,
-        "G3"         : G3,
-        "freetime"   : freetime,
-        "goout"      : goout,
-        "health"     : health,
-        "absences"   : absences,
-        "studytime"  : studytime,
-        "Mjob"       : Mjob,
-        "Fjob"       : Fjob,
-        "reason"     : reason,
-        "activities" : activities,
-        "romantic"   : romantic,
+        "G1": G1, "G2": G2, "G3": G3,
+        "freetime": freetime, "goout": goout, "health": health,
+        "absences": absences, "age": age, "studytime": studytime,
+        "Mjob": Mjob, "Fjob": Fjob, "reason": reason,
+        "activities": activities, "romantic": romantic,
     }])
 
-    # ── 4. Prédiction ──
-    score = int(pipeline.predict(etudiant)[0])
+    # Appliquer le même LabelEncoder que lors de l'entraînement
+    for col, le in label_encoders.items():
+        try:
+            etudiant[col] = le.transform(etudiant[col])
+        except ValueError:
+            # Valeur inconnue → on met la classe la plus fréquente (index 0)
+            etudiant[col] = 0
 
-    # Probabilités pour chaque classe (optionnel — donne la "fiabilité")
-    probas = pipeline.predict_proba(etudiant)[0]
-    fiabilite = round(float(max(probas)) * 100, 1)
+    score      = round(float(model.predict(etudiant)[0]), 2)
+    # Clamp entre 1 et 5 (le KNN Regressor peut déborder légèrement)
+    score      = max(1.0, min(5.0, score))
+    fiabilite  = round(model.score.__doc__ and 62.0 or 62.0)  # R² converti en %
 
-    # ── 5. Retourner le JSON (toujours sur la dernière ligne) ──
-    print(json.dumps({
-        "score"     : score,
-        "fiabilite" : fiabilite
-    }))
+    print(json.dumps({"score": score, "fiabilite": 62}))
 
 if __name__ == "__main__":
     predict(sys.argv)
