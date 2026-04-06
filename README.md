@@ -41,10 +41,10 @@ https://www.kaggle.com/code/kanncaa1/does-alcohol-affect-success/input
 ## Auteurs
 Projet réalisé par :
 
-Lana Schembri
-Mona Bourgeron
-Lea Carminati
-Sidney Dachez
+- Lana Schembri
+- Mona Bourgeron
+- Lea Carminati
+- Sidney Dachez
 
 Licence 3 MIASHS, Université Paul Valéry Montpellier
 
