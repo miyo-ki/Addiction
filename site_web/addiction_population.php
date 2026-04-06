@@ -228,8 +228,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="block-label"><span class="block-label-line"></span>Analyses descriptives</div>
             <h2 class="block-title">Exploration des données</h2>
             <p class="analysis-intro">
-                Avant de construire les modèles, nous avons analysé la distribution du score d'addiction,
-                les corrélations entre variables et les profils types d'étudiants.
+                Avant de construire les modèles, nous avons analysé la distribution des consommation de tabac,
+                les corrélations entre variables et les profils types des individus.
             </p>
 
             <div class="charts-grid">
@@ -655,7 +655,7 @@ new Chart(document.getElementById('chartNiveau'), {
         ...chartDefaults,
         plugins: {
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} cig/j` } }
+            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} cig / j` } }
         },
         scales: {
             ...chartDefaults.scales,
