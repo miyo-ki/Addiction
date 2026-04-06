@@ -1,8 +1,8 @@
 # fastapi_predict.py
 # Démarrage : python -m uvicorn fastapi_predict:app --reload
 #
-# Même structure que api_hate_detection_fastapi.py du projet de référence :
-#   PHP  →  curl_init('http://127.0.0.1:8000/predict')  →  FastAPI  →  .pkl  →  JSON
+# Pipeline : OHE -> StandardScaler -> PCA(20) -> GaussianNB
+# Features : toutes colonnes de student-mat.csv sauf Dalc et Walc (28 variables)
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,75 +11,77 @@ import joblib
 import pandas as pd
 import os
 
-app = FastAPI()
+app = FastAPI(title="AddictData — Alcohol Prediction API")
 
-# Autorise les appels depuis PHP en local
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://addiction.rf.gd", "http://addiction.rf.gd"],
+    allow_origins=["*"],
     allow_methods=["POST"],
     allow_headers=["*"],
 )
 
-# ── Chargement du modèle au démarrage ────────────────────
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "model_alcool.pkl")
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "model_alcohol.pkl")
 try:
-    saved          = joblib.load(MODEL_PATH)
-    MODEL          = saved['model']
-    LABEL_ENCODERS = saved.get('label_encoders', {})
-    IS_PIPELINE    = False
-    print("Modèle chargé")
+    MODEL = joblib.load(MODEL_PATH)
+    print("Modele charge (OHE -> Scaler -> PCA -> NaiveBayes)")
 except FileNotFoundError:
     MODEL = None
-    print("ERREUR : model_alcool.pkl introuvable")
+    print("ERREUR : model_alcohol.pkl introuvable")
 
-# ── Schéma des données (équivalent de ['message'] dans le projet de référence)
+
 class StudentData(BaseModel):
     age:        int
-    G1:         int
-    G2:         int
-    G3:         int
+    Medu:       int
+    Fedu:       int
+    traveltime: int
+    studytime:  int
+    failures:   int
+    famrel:     int
     freetime:   int
     goout:      int
     health:     int
     absences:   int
-    studytime:  int
+    G1:         int
+    G2:         int
+    G3:         int
+    school:     str
+    sex:        str
+    address:    str
+    famsize:    str
+    Pstatus:    str
     Mjob:       str
     Fjob:       str
     reason:     str
+    guardian:   str
+    schoolsup:  str
+    famsup:     str
+    paid:       str
     activities: str
+    nursery:    str
+    higher:     str
+    internet:   str
     romantic:   str
 
-# ── Route de vérification ─────────────────────────────────
+
 @app.get("/")
 def health():
     return {"status": "ok", "model_loaded": MODEL is not None}
 
-# ── Route de prédiction ───────────────────────────────────
-# Même URL /predict que dans le projet de référence : $apiUrl = '.../predict'
+
 @app.post("/predict")
 def predict(data: StudentData):
     if MODEL is None:
-        return {"error": "Modèle non chargé"}
+        return {"error": "Modele non charge. Verifiez model_alcohol.pkl."}
 
-    etudiant = pd.DataFrame([{
-        "G1": data.G1, "G2": data.G2, "G3": data.G3,
-        "freetime": data.freetime, "goout": data.goout,
-        "health": data.health, "absences": data.absences,
-        "age": data.age, "studytime": data.studytime,
-        "Mjob": data.Mjob, "Fjob": data.Fjob,
-        "reason": data.reason, "activities": data.activities,
-        "romantic": data.romantic,
-    }])
+    etudiant = pd.DataFrame([data.model_dump()])
 
-    # Encodage LabelEncoder (même logique que l'entraînement)
-    for col, le in LABEL_ENCODERS.items():
-        try:
-            etudiant[col] = le.transform(etudiant[col])
-        except ValueError:
-            etudiant[col] = 0
+    score = int(MODEL.predict(etudiant)[0])
+    score = max(1, min(5, score))
 
-    raw   = MODEL.predict(etudiant)[0]
-    score = int(round(max(1.0, min(5.0, float(raw)))))
+    try:
+        probas    = MODEL.predict_proba(etudiant)[0]
+        fiabilite = round(float(max(probas)) * 100, 1)
+    except AttributeError:
+        fiabilite = 60.0
 
-    return {"score": score, "fiabilite": 62}
+    return {"score": score, "fiabilite": fiabilite}

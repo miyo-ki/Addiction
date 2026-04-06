@@ -95,7 +95,7 @@ $members = [
             <p class="hero-sub">
                 Quatre jeux de données. Quatre formes de dépendance.<br>
                 Une approche scientifique pour mieux comprendre un enjeu de société.
-                <BR>Besoin d'aide ? Consulter ce <a href="https://www.ameli.fr/assure/sante/themes/addictions/suivi">site</a>.
+                <BR>Besoin d'aide ? Cliquez <a href="https://www.ameli.fr/assure/sante/themes/addictions/suivi">ICI</a>.
             </p>
             <div class="hero-cta">
                 <a href="#datasets" class="btn btn-primary">Explorer les données</a>
@@ -151,7 +151,7 @@ $members = [
                     </p>
 
                     <div class="pres-methods">
-                        <?php foreach (["Statistiques descriptives", "Corrélations", "Visualisation", "Modélisation", "Clustering"] as $m): ?>
+                        <?php foreach (["Statistiques descriptives", "Corrélations", "Visualisation", "Modélisation", "Prédiction"] as $m): ?>
                         <span class="method-tag"><?= $m ?></span>
                         <?php endforeach; ?>
                     </div>

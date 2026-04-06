@@ -145,13 +145,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <p class="dataset-hero-sub">
             Étude sur la consommation d'alcool quotidienne d'étudiants en mathématiques,
             croisée avec leurs résultats scolaires, leur vie sociale et leur contexte familial.
-            <BR>Besoin d'aide ? Consulter ce <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">site</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
+            <BR>Besoin d'aide ? Cliquez <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">ICI</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
         </p>
         <div class="dataset-hero-pills">
             <span class="hero-pill"><span class="hero-pill-dot"></span>395 étudiants</span>
             <span class="hero-pill"><span class="hero-pill-dot"></span>14 variables</span>
             <span class="hero-pill"><span class="hero-pill-dot"></span>Classification · Dalc 1–5</span>
-            <span class="hero-pill"><span class="hero-pill-dot"></span>Accuracy = 0.62</span>
         </div>
     </div>
 </header>
@@ -181,14 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="block-label"><span class="block-label-line"></span>Présentation du dataset</div>
         <h2 class="block-title">Student Alcohol Consumption — Math</h2>
         <p class="block-text">
-            Ce jeu de données recense <strong>395 étudiants</strong> inscrits en cours de mathématiques
-            dans deux lycées portugais. Il documente leur contexte familial, leurs habitudes de vie,
+            Ce jeu de données recense <strong>395 étudiants</strong> inscrits en cours de mathématiques.
+            Il documente leur contexte familial, leurs habitudes de vie,
             leurs résultats scolaires et leur consommation d'alcool.
         </p>
         <p class="block-text">
-            La <strong>variable cible</strong> est <code>Dalc</code> — la consommation d'alcool en semaine,
-            sur une échelle de <strong>1 (très faible) à 5 (très élevée)</strong>. Il s'agit d'un problème
-            de <strong>classification multiclasse</strong>.
+            La <strong>variable cible</strong> est <code>Dalc</code> — la consommation d'alcool journialière,
+            sur une échelle de <strong>1 (très faible) à 5 (très élevée)</strong>. 
         </p>
         <div class="info-grid">
             <div class="info-card">
@@ -197,11 +195,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
             <div class="info-card">
                 <p class="info-card-title">Variable cible</p>
-                <p class="info-card-text">Dalc : consommation d'alcool en semaine (1–5). Il s'agit d'un problème de <strong>classification</strong> : on prédit une catégorie ordinale, non une valeur continue.</p>
+                <p class="info-card-text">Dalc : consommation d'alcool journalière (1–5). Il s'agit d'un problème de <strong>classification</strong> : on prédit une catégorie ordinale, non une valeur continue.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Origine des données</p>
-                <p class="info-card-text">Dataset public issu de Kaggle (P. Cortez & A. Silva, 2008), collecté auprès d'élèves de lycées portugais. Utilisé à des fins strictement pédagogiques.</p>
+                <p class="info-card-text">Dataset public issu de Kaggle (P. Cortez & A. Silva, 2008), provenance des données inconnue. Utilisé à des fins strictement pédagogiques.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Preprocessing</p>
@@ -240,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Graphique 3 : Dalc selon fréquence de sorties -->
                 <div class="chart-card">
-                    <p class="chart-title">Temps libre moyen selon la consommation d'alcool</p>
+                    <p class="chart-title">Moyenne du nombre de sortie avec des amis selon la consommation d'alcool</p>
                     <div class="chart-canvas-wrap">
                         <canvas id="chartFreetimeDalc"></canvas>
                     </div>
@@ -525,8 +523,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Conseil si niveau élevé -->
                 <div class="pro-advice" id="proAdvice">
-                    <strong>⚠ Niveau de consommation élevé détecté !</strong>
+                    <p><strong>⚠ Niveau de consommation élevé détecté !</strong>
                     Ton niveau de consommation d'alcool est significativement élevé. Il peut être utile d'en parler à un professionnel de santé (médecin, psychologue ou conseiller universitaire). Des ressources comme <em>Santé Psy Étudiant</em> proposent des consultations gratuites.
+                    Cliquez <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">ICI</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
+                    </p>
                 </div>
             </div>
 
@@ -683,15 +683,13 @@ new Chart(document.getElementById('chartFreetimeDalc'), {
         labels: ['1', '2', '3', '4', '5'],
         datasets: [{
             label: 'Temps libre moyen',
-            data: [3.115942, 3.400000, 3.576923, 3.666667, 4.111111], 
+            data: [2.931159, 3.360000, 3.692308, 3.666667, 4.222222], 
             borderColor: 'rgba(54, 162, 235, 0.9)',
             backgroundColor: 'rgba(54, 162, 235, 0.1)',
             borderWidth: 2.5,
             pointBackgroundColor: 'rgba(54, 162, 235, 0.9)',
             pointRadius: 5,
             pointHoverRadius: 7,
-            // tension: 0 permet d'avoir des droites strictes entre les points
-            // tension: 0.3 ferait une courbe lissée
             tension: 0.3, 
             fill: true
         }]
@@ -711,8 +709,8 @@ new Chart(document.getElementById('chartFreetimeDalc'), {
             x: { ...chartDefaults.scales.x },
             y: { 
                 ...chartDefaults.scales.y, 
-                min: 0, 
-                max: 5,
+                min: 2.5, 
+                max: 4.5,
                 title: { display: true, text: 'Temps libre (freetime)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
             }
         }
@@ -853,7 +851,7 @@ new Chart(document.getElementById('chartGradesDalcReason'), {
 
 // ── Graphique de positionnement du résultat ──────────────
 let resultPositionChart = null;
-const distData   = [130, 115, 74, 50, 26];
+const distData   = [276, 75, 26, 9, 9];
 const distLabels = ['1','2','3','4','5'];
 
 function updateResultPositionChart(userScore) {

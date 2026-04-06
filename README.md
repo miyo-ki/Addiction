@@ -3,7 +3,7 @@
 Dans le cadre de notre formation en licence de MIASHS (Mathématique et Informatique Appliquées aux Sciences Humaines et Sociales) de l'université Paul-Valéry Montpellier, nous avons décidé d'effectuer des analyses et de mettre en place des modèles d'apprentissage sur 4 jeux de données portant sur l'addiction.
 
 ## Présentation
-Ce projet analyse quatre types de dépendance : aux **réseaux sociaux**, à l'**alcool chez les étudiants**, aux **téléphones portable**s et à la **cigarette**, à travers des techniques de statistiques descriptives, de visualisation et de modélisation prédictive.
+Ce projet analyse quatre types de dépendance : aux **réseaux sociaux**, à l'**alcool chez les étudiants**, aux **téléphones portables** et à la **cigarette**, à travers des techniques de statistiques descriptives, de visualisation et de modélisation prédictive.
 
 Notre objectif : **identifier les variables déclenchant ou impactant les addictions.**
 
@@ -12,10 +12,10 @@ Cependant, les différents jeux de données, à l'exception de celui portant sur
 **Site interactif** : addiction.rf.gd
 
 ## Démarche
-Dans un premier temps, nous avons dans un premier temps effectué des **analyses exploratoires** pour chaque jeu de données afin de repérer les éventuelles corrélations entre les variables de nos jeux de données et d'en retirer des graphiques pertinents.
+Dans un premier temps, nous avons effectué des **analyses exploratoires** pour chaque jeu de données afin de repérer les éventuelles corrélations entre les variables de nos jeux de données et d'en retirer des graphiques pertinents.
 
 
-Nous avons ensuite testé plusieurs **algorithmes de machine learning** sur chacun des quatre jeux de données, en utilisant GridSearchCV pour optimiser les hyperparamètres et comparer les performances afin de retenir le modèle le plus adapté à chaque cas.
+Nous avons ensuite testé plusieurs **algorithmes de machine learning** sur chacun des quatre jeux de données, en utilisant notamment GridSearchCV pour optimiser les hyperparamètres et comparer les performances afin de retenir le modèle le plus adapté à chaque cas.
 
 
 Enfin, nous avons conçu un site de **présentation dédié au projet**, comprenant pour chaque jeu de données une page d'analyse ainsi qu'un **formulaire interactif** permettant d'effectuer des prédictions sur de nouvelles données à l'aide du meilleur modèle retenu.
