@@ -1,17 +1,24 @@
-# Addiction
+# AddictData
 
 Dans le cadre de notre formation en licence de MIASHS (Mathématique et Informatique Appliquées aux Sciences Humaines et Sociales) de l'université Paul-Valéry Montpellier, nous avons décidé d'effectuer des analyses et de mettre en place des modèles d'apprentissage sur 4 jeux de données portant sur l'addiction.
 
-Ce projet analyse quatre types de dépendance : aux réseaux sociaux, à l'alcool chez les étudiants, aux téléphones portables et à la cigarette, à travers des techniques de statistiques descriptives, de visualisation et de modélisation prédictive.
+## Présentation
+Ce projet analyse quatre types de dépendance : aux **réseaux sociaux**, à l'**alcool chez les étudiants**, aux **téléphones portable**s et à la **cigarette**, à travers des techniques de statistiques descriptives, de visualisation et de modélisation prédictive.
 
-Cependant, les différents jeux de données, à l'exception de celui portant sur l'addiction aux réseaux sociaux, ont été générés de manière aléatoire. De ce fait, ce projet a une vocation purement pédagogique et ne prétend pas à une quelconque validité scientifique.
+Notre objectif : **identifier les variables déclenchant ou impactant les addictions.**
 
-Notre objectif : identifier les variables déclenchant ou impactant les addictions. 
+Cependant, les différents jeux de données, à l'exception de celui portant sur l'addiction aux réseaux sociaux, ont été générés de manière aléatoire. De ce fait, ce projet a une vocation **purement pédagogique** et ne prétend pas à une quelconque validité scientifique.
 
-Pour cela, nous avons dans un premier temps effectué des analyses descriptives afin de repérer les éventuelles corrélations entre les variables de nos jeux de données et d'en retirer des graphiques pertinents.
-Ensuite nous avons entrainé plusieurs modèles, notamment à l'aide de GridSearchCV dans le but d'en tirer les meilleurs paramètres. 
-Enfin, nous avons repéré pour chaque jeu de données les modèles avec les meilleurs scores de prédictions et mis en place un formulaire permettant d'effectuer des prédictions sur de nouvelles données. 
+**Site interactif** : addiction.rf.gd
 
+## Démarche
+Dans un premier temps, nous avons dans un premier temps effectué des **analyses exploratoires** pour chaque jeu de données afin de repérer les éventuelles corrélations entre les variables de nos jeux de données et d'en retirer des graphiques pertinents.
+
+
+Nous avons ensuite testé plusieurs **algorithmes de machine learning** sur chacun des quatre jeux de données, en utilisant GridSearchCV pour optimiser les hyperparamètres et comparer les performances afin de retenir le modèle le plus adapté à chaque cas.
+
+
+Enfin, nous avons conçu un site de **présentation dédié au projet**, comprenant pour chaque jeu de données une page d'analyse ainsi qu'un **formulaire interactif** permettant d'effectuer des prédictions sur de nouvelles données à l'aide du meilleur modèle retenu.
 
 Voici le lien de notre site :
 https://addiction.rf.gd/?i=1
