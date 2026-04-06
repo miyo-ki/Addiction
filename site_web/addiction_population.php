@@ -92,26 +92,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <link rel="stylesheet" href="styles/style_social_addiction.css">
+    <link rel="stylesheet" href="styles/style_jdd.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div class="noise"></div>
 
-    <!-- ── NAVIGATION ── -->
+    <!-- ── NAVBAR ── -->
     <nav class="navbar">
         <div class="nav-inner">
             <a href="index.php" class="nav-logo">
-                <span class="logo-mark">A</span>
-                <span class="logo-text">ddictData</span>
+                <span class="logo-text">AddictData</span>
             </a>
             <ul class="nav-links">
-                <li><a href="index.php#presentation">Projet</a></li>
-                <li><a href="index.php#datasets">Jeux de données</a></li>
-                <li><a href="index.php#equipe">Équipe</a></li>
+                <li><a href="index.php">Accueil</a></li>
+                <li class="nav-dropdown">
+                    <a href="#">Datasets ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="social_addiction.php" class="active">Social Addiction</a></li>
+                        <li><a href="addiction_population.php">Smoke Addiction</a></li>
+                        <li><a href="mobile_addiction.php">Mobile Addiction</a></li>
+                        <li><a href="student-mat.php">Alcool Addiction</a></li>
+                    </ul>
+                </li>
             </ul>
-            <span class="nav-badge">Projet Étudiant 2025 – 2026</span>
         </div>
     </nav>
 
