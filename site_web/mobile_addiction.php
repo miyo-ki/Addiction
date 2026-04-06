@@ -34,43 +34,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $data[$k] = $val;
     }
 
-    // Chemin vers predict_mobile.py — même dossier que mobile_addiction.php
-    $predict_script = __DIR__ . '/predict_mobile.py';
-    $python         = 'py';
+    // ── Appel à l'API Render ──
+    $api_url = 'https://addiction-api.onrender.com/predict/mobile';
 
-    $args = implode(' ', [
-        escapeshellarg((string)$data['age']),
-        escapeshellarg($data['gender']),
-        escapeshellarg($data['occupation']),
-        escapeshellarg($data['education']),
-        escapeshellarg((string)$data['screen_time']),
-        escapeshellarg((string)$data['unlocks']),
-        escapeshellarg((string)$data['social_hours']),
-        escapeshellarg((string)$data['sleep_hours']),
-        escapeshellarg((string)$data['mental_health']),
-        escapeshellarg((string)$data['stress']),
-        escapeshellarg((string)$data['first_phone']),
-        escapeshellarg($data['has_app']),
-        escapeshellarg((string)$data['physical']),
+    $payload = json_encode([
+    'age'         => (int)$data['age'],
+    'gender'      => $data['gender'],
+    'occupation'  => $data['occupation'],
+    'education'   => $data['education'],       // ← non Education_Level
+    'screen_time' => (float)$data['screen_time'],
+    'unlocks'     => (int)$data['unlocks'],
+    'social_hours'=> (float)$data['social_hours'],
+    'sleep_hours' => (float)$data['sleep_hours'],
+    'mental_health'=> (int)$data['mental_health'],
+    'stress'      => (int)$data['stress'],
+    'first_phone' => (int)$data['first_phone'],
+    'has_app'     => $data['has_app'],
+    'physical'    => (float)$data['physical'],
     ]);
 
-    // -W ignore supprime les warnings sklearn (version mismatch)
-    $cmd    = "$python -W ignore " . escapeshellarg($predict_script) . " $args 2>&1";
-    $output = trim(shell_exec($cmd));
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_TIMEOUT,        30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    $curl_err = curl_error($ch);
+    curl_close($ch);
 
-    // Extraire uniquement la dernière ligne (le JSON)
-    $lines  = explode("\n", $output);
-    $last   = trim(end($lines));
+    if ($curl_err) {
+        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $curl_err]);
+        exit;
+    }
 
-    $result = json_decode($last, true);
+    $result = json_decode($response, true);
     if (!$result) {
-        echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
+        echo json_encode(['error' => 'Réponse invalide de l\'API', 'raw' => $response]);
+    } elseif (isset($result['erreur'])) {
+        echo json_encode(['error' => $result['erreur']]);
     } else {
-        if (isset($result['erreur'])) {
-            echo json_encode(['error' => $result['erreur']]);
-        } else {
-            echo json_encode($result);
-        }
+        echo json_encode($result);
     }
     exit;
 }

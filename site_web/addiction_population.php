@@ -35,48 +35,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $data[$k] = $val;
     }
 
-    // Chemin vers predict_smoke.py — même dossier que social_addiction.php
-    $predict_script = __DIR__ . '/predict_smoke.py';
-    $python         = 'py'; // Windows MAMP
+    // ── Appel à l'API Render ──
+    $api_url = 'https://addiction-api.onrender.com/predict/smoke';
 
-    // predict.py attend les 13 valeurs comme arguments positionnels
-    // dans l'ordre exact de feature_names (cf. notebook)
-    $args = implode(' ', [
-        escapeshellarg((string)$data['age']),
-        escapeshellarg($data['gender']),
-        escapeshellarg($data['education_level']),
-        escapeshellarg($data['employment_status']),
-        escapeshellarg((string)$data['annual_income_usd']),
-        escapeshellarg((string)$data['drinks_per_week']),
-        escapeshellarg((string)$data['age_started_smoking']),
-        escapeshellarg((string)$data['attempts_to_quit_smoking']),
-        escapeshellarg($data['mental_health_status']),
-        escapeshellarg($data['exercise_frequency']),
-        escapeshellarg($data['diet_quality']),
-        escapeshellarg((string)$data['sleep_hours']),
-        escapeshellarg($data['social_support']),
-        escapeshellarg((string)$data['addict_smoke']),
+    $payload = json_encode([
+    'age'                      => (int)$data['age'],
+    'gender'                   => $data['gender'],
+    'education_level'          => $data['education_level'],
+    'employment_status'        => $data['employment_status'],
+    'annual_income_usd'        => (int)$data['annual_income_usd'],
+    'drinks_per_week'          => (int)$data['drinks_per_week'],
+    'age_started_smoking'      => (int)$data['age_started_smoking'],
+    'attempts_to_quit_smoking' => (int)$data['attempts_to_quit_smoking'],
+    'mental_health_status'     => $data['mental_health_status'],
+    'exercise_frequency'       => $data['exercise_frequency'],
+    'diet_quality'             => $data['diet_quality'],
+    'sleep_hours'              => (float)$data['sleep_hours'],
+    'social_support'           => $data['social_support'],
+    'addict_smoke'             => (int)$data['addict_smoke'],
     ]);
 
-    // -W ignore supprime les warnings sklearn (version mismatch)
-    // qui polluaient stdout et cassaient le JSON
-    $cmd    = "$python -W ignore " . escapeshellarg($predict_script) . " $args 2>&1";
-    $output = trim(shell_exec($cmd));
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_TIMEOUT,        30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    $curl_err = curl_error($ch);
+    curl_close($ch);
 
-    // Extraire uniquement la dernière ligne (le JSON)
-    $lines  = explode("\n", $output);
-    $last   = trim(end($lines));
+    if ($curl_err) {
+        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $curl_err]);
+        exit;
+    }
 
-    $result = json_decode($last, true);
+    $result = json_decode($response, true);
     if (!$result) {
-        echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
+        echo json_encode(['error' => 'Réponse invalide de l\'API', 'raw' => $response]);
+    } elseif (isset($result['erreur'])) {
+        echo json_encode(['error' => $result['erreur']]);
     } else {
-        // Renommer 'erreur' en 'error' si predict_smoke.py a renvoyé une exception
-        if (isset($result['erreur'])) {
-            echo json_encode(['error' => $result['erreur']]);
-        } else {
-            echo json_encode($result);
-        }
+        echo json_encode($result);
     }
     exit;
 }

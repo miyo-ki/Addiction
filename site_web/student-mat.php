@@ -35,44 +35,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $data[$k] = $val;
     }
 
-    $predict_script = __DIR__ . '/predict_alcohol.py';
-    $python = 'py'; // Windows MAMP
+    // ── Appel à l'API Render ──
+    $api_url = 'https://addiction-api.onrender.com/predict/alcohol';
 
-    $args = implode(' ', [
-        escapeshellarg((string)$data['age']),
-        escapeshellarg((string)$data['G1']),
-        escapeshellarg((string)$data['G2']),
-        escapeshellarg((string)$data['G3']),
-        escapeshellarg((string)$data['freetime']),
-        escapeshellarg((string)$data['goout']),
-        escapeshellarg((string)$data['health']),
-        escapeshellarg((string)$data['absences']),
-        escapeshellarg((string)$data['studytime']),
-        escapeshellarg($data['Mjob']),
-        escapeshellarg($data['Fjob']),
-        escapeshellarg($data['reason']),
-        escapeshellarg($data['activities']),
-        escapeshellarg($data['romantic']),
+    $payload = json_encode([
+        'age'        => (int)$data['age'],
+        'G1'         => (int)$data['G1'],
+        'G2'         => (int)$data['G2'],
+        'G3'         => (int)$data['G3'],
+        'freetime'   => (int)$data['freetime'],
+        'goout'      => (int)$data['goout'],
+        'health'     => (int)$data['health'],
+        'absences'   => (int)$data['absences'],
+        'studytime'  => (int)$data['studytime'],
+        'Mjob'       => $data['Mjob'],
+        'Fjob'       => $data['Fjob'],
+        'reason'     => $data['reason'],
+        'activities' => $data['activities'],
+        'romantic'   => $data['romantic'],
     ]);
 
-    $cmd    = "$python -W ignore " . escapeshellarg($predict_script) . " $args 2>&1";
-    $output = trim(shell_exec($cmd));
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_TIMEOUT,        30);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    $curl_err = curl_error($ch);
+    curl_close($ch);
 
-    $lines  = explode("\n", $output);
-    $last   = trim(end($lines));
+    if ($curl_err) {
+        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $curl_err]);
+        exit;
+    }
 
-    $result = json_decode($last, true);
+    $result = json_decode($response, true);
     if (!$result) {
-        echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
+        echo json_encode(['error' => 'Réponse invalide de l\'API', 'raw' => $response]);
+    } elseif (isset($result['erreur'])) {
+        echo json_encode(['error' => $result['erreur']]);
     } else {
-        if (isset($result['erreur'])) {
-            echo json_encode(['error' => $result['erreur']]);
-        } else {
-            echo json_encode($result);
-        }
+        echo json_encode($result);
     }
     exit;
-}
+    }
 ?>
 <!DOCTYPE html>
 <html lang="fr">
