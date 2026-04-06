@@ -32,6 +32,12 @@ https://www.kaggle.com/datasets/khushikyad001/global-mobile-phone-addiction-data
 Addiction à la cigarette : 
 https://www.kaggle.com/datasets/khushikyad001/cigarettes-and-alcohol-addiction
 
+Addiction aux réseaux sociaux chez les étudiants : 
+https://www.kaggle.com/code/adilshamim8/social-media-addiction-among-students/input
+
+Addiction à l'alcool : 
+https://www.kaggle.com/code/kanncaa1/does-alcohol-affect-success/input
+
 ## Auteurs
 Projet réalisé par :
 
@@ -42,9 +48,3 @@ Sidney Dachez
 
 Licence 3 MIASHS, Université Paul Valéry Montpellier
 
-
-Addiction aux réseaux sociaux chez les étudiants : 
-https://www.kaggle.com/code/adilshamim8/social-media-addiction-among-students/input
-
-Addiction à l'alcool : 
-https://www.kaggle.com/code/kanncaa1/does-alcohol-affect-success/input
