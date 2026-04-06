@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     // Chemin vers predict_mobile.py — même dossier que mobile_addiction.php
     $predict_script = __DIR__ . '/predict_mobile.py';
-    $python         = 'python3';
+    $python         = 'py';
 
     $args = implode(' ', [
         escapeshellarg((string)$data['age']),
