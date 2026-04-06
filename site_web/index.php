@@ -47,10 +47,10 @@ $datasets = [
 ];
 
 $members = [
-    ["name" => "Lea Carminati", "role" => "Chef de projet"],
-    ["name" => "Mona Bourgeron", "role" => "Data scientist"],
-    ["name" => "Lana Schembri", "role" => "Data scientist"],
-    ["name" => "Sidney Dachez", "role" => "Data scientist"],
+    ["name" => "Lea Carminati"],
+    ["name" => "Mona Bourgeron"],
+    ["name" => "Lana Schembri"],
+    ["name" => "Sidney Dachez"],
 ];
 ?>
 <!DOCTYPE html>
