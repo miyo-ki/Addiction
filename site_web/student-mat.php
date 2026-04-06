@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="stats-bar reveal">
         <div class="stat-box"><span class="stat-box-num">395</span><span class="stat-box-label">Étudiants</span></div>
         <div class="stat-box"><span class="stat-box-num">14</span><span class="stat-box-label">Variables</span></div>
-        <div class="stat-box"><span class="stat-box-num">0.62</span><span class="stat-box-label">Accuracy meilleur modèle</span></div>
+        <div class="stat-box"><span class="stat-box-num">0.0913</span><span class="stat-box-label">R² du meilleur modèle</span></div>
         <div class="stat-box"><span class="stat-box-num">5</span><span class="stat-box-label">Modèles testés</span></div>
     </div>
 
@@ -214,31 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <div class="charts-grid">
 
-                <!-- Graphique 1 : Distribution de Dalc -->
-                <div class="chart-card">
-                    <p class="chart-title">Distribution de la consommation (Dalc)</p>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="chartDistribution"></canvas>
-                    </div>
-                </div>
-
-                <!-- Graphique 2 : Consommation par genre -->
-                <div class="chart-card">
-                    <p class="chart-title">Consommation moyenne par genre</p>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="chartGenre"></canvas>
-                    </div>
-                </div>
-
-                <!-- Graphique 3 : Dalc selon fréquence de sorties -->
-                <div class="chart-card">
-                    <p class="chart-title">Sorties avec amis vs consommation (Dalc moyen)</p>
-                    <div class="chart-canvas-wrap">
-                        <canvas id="chartSorties"></canvas>
-                    </div>
-                </div>
-
-                <!-- Graphique 4 : Temps d'étude par niveau Dalc -->
+                <!-- Graphique 1 : Temps d'étude par niveau Dalc -->
                 <div class="chart-card">
                     <p class="chart-title">Temps d'étude selon le niveau de consommation</p>
                     <div class="chart-canvas-wrap">
@@ -246,11 +222,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     </div>
                 </div>
 
+                <!-- Graphique 2 : Distribution de Dalc -->
+                <div class="chart-card">
+                    <p class="chart-title">Distribution de la consommation (Dalc)</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartReason"></canvas>
+                    </div>
+                </div>
+
+                <!-- Graphique 3 : Dalc selon fréquence de sorties -->
+                <div class="chart-card">
+                    <p class="chart-title">Temps libre moyen selon la consommation d'alcool</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartFreetimeDalc"></canvas>
+                    </div>
+                </div>
+
+                <!-- Graphique 4 :  -->
+                <div class="chart-card">
+                    <p class="chart-title">Comparaison des modèles</p>
+                    <div class="chart-canvas-wrap">
+                        <canvas id="chartComparaisonR2"></canvas>
+                    </div>
+                </div>
+
                 <!-- Graphique 5 : Note finale G3 selon Dalc -->
                 <div class="chart-card chart-card-full">
-                    <p class="chart-title">Corrélation : note finale (G3) & consommation d'alcool (Dalc)</p>
+                    <p class="chart-title">Moyennes des notes selon la consommation d'alcool et les raisons d'études</p>
                     <div class="chart-canvas-wrap-lg">
-                        <canvas id="chartCorrelations"></canvas>
+                        <canvas id="chartGradesDalcReason"></canvas>
                     </div>
                 </div>
 
@@ -263,33 +263,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="block-label"><span class="block-label-line"></span>Modèles d'IA</div>
         <h2 class="block-title">Comparaison des modèles entraînés</h2>
         <p class="block-text">
-            Nous avons testé <strong>5 algorithmes de classification</strong> avec différentes stratégies
-            d'encodage (LabelEncoder, OneHotEncoder, ACP). Le déséquilibre des classes (majorité Dalc=1)
-            rend la tâche difficile. Le meilleur modèle retenu est le
-            <strong>Random Forest (OHE)</strong> avec une accuracy de 0.62.
+            Nous avons testé <strong>5 algorithmes de classification et régression</strong> avec différentes stratégies
+            d'encodage (LabelEncoder, OneHotEncoder, ACP). Cependant, notre jeu de donnée étant généré aléatoirement, nos modèles ne peuvent expliquer la variance que très faiblement. De plus, le déséquilibre des classes (majorité Dalc=1)
+            rend tout apprentissage à nuancer. Le meilleur modèle retenu est le
+            <strong>KNN (LE)</strong> avec une R² de 0.0913.
         </p>
 
         <div class="models-grid">
             <!-- Random Forest — meilleur -->
             <div class="model-card best">
-                <p class="model-name">Random Forest</p>
+                <p class="model-name">KNN</p>
                 <div class="model-metrics">
                     <div class="metric-row">
-                        <span class="metric-label">Accuracy</span>
-                        <span class="metric-value good">0.6203</span>
+                        <span class="metric-label">R²</span>
+                        <span class="metric-value good">0.0913</span>
                     </div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:62%"></div></div>
                     <div class="metric-row">
                         <span class="metric-label">MAE</span>
-                        <span class="metric-value">0.4177</span>
+                        <span class="metric-value">0.5970</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">RMSE</span>
-                        <span class="metric-value">0.7215</span>
+                        <span class="metric-value">0.7956</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">Encodage</span>
-                        <span class="metric-value">OHE</span>
+                        <span class="metric-value">LE</span>
                     </div>
                 </div>
             </div>
@@ -298,11 +298,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="model-card">
                 <p class="model-name">XGBoost</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">Accuracy</span><span class="metric-value">0.5949</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.0003</span></div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:59%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.4430</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.7601</span></div>
-                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">OHE</span></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.6227</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.8346</span></div>
+                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">ACP</span></div>
                 </div>
             </div>
 
@@ -310,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="model-card">
                 <p class="model-name">XGBoost RGS</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">Accuracy</span><span class="metric-value">0.5823</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.0579</span></div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:58%"></div></div>
                     <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.4557</span></div>
                     <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.7812</span></div>
@@ -320,13 +320,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <!-- KNN -->
             <div class="model-card">
-                <p class="model-name">KNN</p>
+                <p class="model-name">Random Forest</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">Accuracy</span><span class="metric-value">0.5696</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">-0.0193</span></div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:57%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.5063</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.8241</span></div>
-                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">LE</span></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.6249</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.8427</span></div>
+                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">ACP</span></div>
                 </div>
             </div>
 
@@ -334,22 +334,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <div class="model-card">
                 <p class="model-name">Naive Bayes</p>
                 <div class="model-metrics">
-                    <div class="metric-row"><span class="metric-label">Accuracy</span><span class="metric-value">0.5316</span></div>
+                    <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">-0.0861</span></div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:53%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.5949</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.9114</span></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.5954</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.8699</span></div>
                     <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">LE</span></div>
                 </div>
             </div>
 
             <!-- Explication -->
             <div class="info-card" style="border-left: none;">
-                <p class="info-card-title">Pourquoi Random Forest ?</p>
+                <p class="info-card-title">Pourquoi KNN ?</p>
                 <p class="info-card-text">
-                    Le Random Forest agrège plusieurs arbres de décision entraînés sur des sous-ensembles
-                    aléatoires. Il gère bien le déséquilibre des classes (Dalc = 1 majoritaire) et capture
-                    les interactions non-linéaires entre variables sociales, familiales et scolaires.
-                </p>
+                    L’algorithme des k plus proches voisins (KNN) est un classificateur d’apprentissage non paramétrique et supervisé qui s’appuie sur la notion de proximité pour réaliser des classifications ou des prédictions sur le regroupement d’un point de données.                </p>
             </div>
         </div>
     </div>
@@ -359,8 +356,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="block-label"><span class="block-label-line"></span>Prédiction personnalisée</div>
         <h2 class="block-title">Évalue ton niveau de consommation</h2>
         <p class="block-text">
-            Renseigne ton profil ci-dessous. Le modèle <strong>Random Forest (Accuracy = 0.62)</strong>
-            prédit ton niveau de consommation d'alcool en semaine sur une échelle de 1 à 5.
+            Renseigne ton profil ci-dessous. Le modèle <strong>KNN</strong>
+            prédit ton niveau de consommation d'alcool journalier sur une échelle de 1 à 5.
         </p>
 
         <div class="prediction-section">
@@ -555,152 +552,291 @@ const chartDefaults = {
 };
 
 // 1 — Distribution de Dalc (1–5)
-// Données réelles student-mat : forte concentration sur 1 et 2
-new Chart(document.getElementById('chartDistribution'), {
-    type: 'bar',
+new Chart(document.getElementById('chartReason'), {
+    type: 'pie',
     data: {
-        labels: ['1 — Très faible', '2 — Faible', '3 — Modéré', '4 — Élevé', '5 — Très élevé'],
+        labels: ['Proximité (home)', 'Réputation (reputation)', 'Cours (course)', 'Autre (other)'],
         datasets: [{
-            data: [130, 115, 74, 50, 26],
+            label: 'Raisons',
+            // Les valeurs sont maintenant de vrais pourcentages (total = 100)
+            data: [36.7, 26.6, 27.6, 9.1], 
             backgroundColor: [
-                'rgba(45,47,61,0.35)',
-                'rgba(45,47,61,0.50)',
-                'rgba(251,146,60,0.65)',
-                'rgba(239,68,68,0.70)',
-                'rgba(239,68,68,0.90)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)'
             ],
-            borderRadius: 6,
-            hoverBackgroundColor: 'rgba(45,47,61,1)',
+            hoverOffset: 4 
         }]
     },
     options: {
         ...chartDefaults,
+        rotation: 140, 
         plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} étudiants` } }
+            title: {
+                display: true,
+                font: { size: 14, family: 'DM Mono' },
+                color: '#aaa'
+            },
+            legend: { 
+                display: true, 
+                position: 'bottom' 
+            },
+            tooltip: { 
+                callbacks: { 
+                    // On simplifie grandement le tooltip : 
+                    // on affiche juste la catégorie et la valeur + "%"
+                    label: function(ctx) {
+                        return ` ${ctx.label} : ${ctx.parsed}%`;
+                    }
+                } 
+            }
         },
         scales: {
-            ...chartDefaults.scales,
-            y: { ...chartDefaults.scales.y, title: { display: true, text: 'Nb étudiants', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            x: { display: false },
+            y: { display: false }
         }
     }
 });
 
 // 2 — Consommation moyenne par genre
-new Chart(document.getElementById('chartGenre'), {
+new Chart(document.getElementById('chartComparaisonR2'), {
     type: 'bar',
     data: {
-        labels: ['Homme', 'Femme'],
+        // Tes modèles, déjà triés du meilleur au moins bon
+        labels: [
+            'KNN (LE)', 
+            'XGBoost RGS (ACP)', 
+            'KNN (OHE)', 
+            'KNN (ACP)', 
+            'XGBoost (ACP)', 
+            'Random Forest (ACP)', 
+            'XGBoost RGS (LE)', 
+            'XGBoost RGS (OHE)', 
+            'XGBoost (LE)', 
+            'Random Forest (OHE)', 
+            'Random Forest (LE)', 
+            'XGBoost (OHE)'
+        ],
         datasets: [{
-            label: 'Dalc moyen',
-            data: [2.26, 1.57],
-            backgroundColor: ['rgba(96,165,250,0.75)', 'rgba(244,114,182,0.75)'],
-            borderRadius: 8,
-            barPercentage: 0.45,
+            label: 'R²',
+            // Tes valeurs
+            data: [
+                0.0913, 0.0579, 0.0371, 0.0287, 
+                0.0003, -0.0193, -0.1020, -0.1046, 
+                -0.1092, -0.1322, -0.1911, -0.2595
+            ], 
+            // ── ASTUCE : Vert si positif, Rouge si négatif ──
+            backgroundColor: function(context) {
+                const value = context.dataset.data[context.dataIndex];
+                return value >= 0 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)';
+            },
+            borderRadius: 4,
+            barPercentage: 0.7 
         }]
     },
     options: {
         ...chartDefaults,
+        indexAxis: 'y', // Toujours en barres horizontales
         plugins: {
+            title: {
+                display: true,
+                font: { size: 14, family: 'DM Mono' },
+                color: '#aaa'
+            },
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Dalc moyen : ${ctx.parsed.y}` } }
+            tooltip: { 
+                callbacks: { 
+                    label: ctx => ` R² : ${ctx.parsed.x}` 
+                } 
+            }
         },
         scales: {
-            ...chartDefaults.scales,
-            y: { ...chartDefaults.scales.y, min: 0, max: 5,
-                 title: { display: true, text: 'Dalc moyen', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            x: { 
+                ...chartDefaults.scales.x, 
+                // On laisse Chart.js gérer le min et le max automatiquement grâce aux valeurs négatives
+                title: { display: true, text: 'Score R²', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } 
+            },
+            y: { 
+                ...chartDefaults.scales.y,
+                grid: { display: false } 
+            }
         }
     }
 });
 
 // 3 — Dalc moyen selon la fréquence de sorties (goout 1–5)
-new Chart(document.getElementById('chartSorties'), {
-    type: 'line',
+new Chart(document.getElementById('chartFreetimeDalc'), {
+    // type 'line' pour tracer une droite
+    type: 'line', 
     data: {
-        labels: ['1 — Rare', '2', '3', '4', '5 — Fréquent'],
+        labels: ['1', '2', '3', '4', '5'],
         datasets: [{
-            label: 'Dalc moyen',
-            data: [1.31, 1.54, 1.82, 2.21, 2.74],
-            borderColor: 'rgba(251,146,60,0.9)',
-            backgroundColor: 'rgba(251,146,60,0.08)',
+            label: 'Temps libre moyen',
+            data: [3.115942, 3.400000, 3.576923, 3.666667, 4.111111], 
+            borderColor: 'rgba(54, 162, 235, 0.9)',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
             borderWidth: 2.5,
-            pointBackgroundColor: 'rgba(251,146,60,0.9)',
+            pointBackgroundColor: 'rgba(54, 162, 235, 0.9)',
             pointRadius: 5,
             pointHoverRadius: 7,
-            tension: 0.3,
-            fill: true,
+            // tension: 0 permet d'avoir des droites strictes entre les points
+            // tension: 0.3 ferait une courbe lissée
+            tension: 0.3, 
+            fill: true
         }]
     },
     options: {
         ...chartDefaults,
         plugins: {
+            title: {
+                display: true,
+                font: { size: 14, family: 'DM Mono' },
+                color: '#aaa'
+            },
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Dalc moyen : ${ctx.parsed.y}` } }
+            tooltip: { callbacks: { label: ctx => ` Temps libre moyen : ${ctx.parsed.y} / 5` } }
         },
         scales: {
             x: { ...chartDefaults.scales.x },
-            y: { ...chartDefaults.scales.y, min: 0, max: 5,
-                 title: { display: true, text: 'Dalc moyen', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            y: { 
+                ...chartDefaults.scales.y, 
+                min: 0, 
+                max: 5,
+                title: { display: true, text: 'Temps libre (freetime)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+            }
         }
     }
 });
-
 // 4 — Temps d'étude moyen par niveau Dalc
 new Chart(document.getElementById('chartStudytime'), {
     type: 'bar',
     data: {
-        labels: ['1 — Très faible', '2 — Faible', '3 — Modéré', '4 — Élevé', '5 — Très élevé'],
-        datasets: [{
-            label: 'Studytime moyen',
-            data: [2.08, 1.95, 1.82, 1.74, 1.62],
-            backgroundColor: 'rgba(45,47,61,0.70)',
-            borderRadius: 6,
-            barPercentage: 0.5,
-        }]
+        labels: ['1', '2', '3', '4', '5'],
+        
+        datasets: [
+            {
+                label: '1H',
+                data: [59, 24, 15, 2, 5], 
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                borderRadius: 4,
+            },
+            {
+                label: '2H',
+                data: [141, 38, 9, 7, 3], 
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderRadius: 4,
+            },
+            {
+                label: '3H',
+                data: [53, 11, 1, 0, 0], 
+                backgroundColor: 'rgba(255, 206, 86, 0.7)',
+                borderRadius: 4,
+            },
+            {
+                label: '4H',
+                data: [23, 2, 1, 0, 1], 
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                borderRadius: 4,
+            }
+        ]
     },
     options: {
         ...chartDefaults,
         plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Studytime moyen : ${ctx.parsed.y} / 4` } }
+            legend: { 
+                display: true,
+                position: 'bottom'
+            },
+            tooltip: { 
+                callbacks: { 
+                    // Mise à jour du tooltip pour afficher un nombre entier d'étudiants
+                    label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} étudiant(s)` 
+                } 
+            }
         },
         scales: {
             ...chartDefaults.scales,
-            y: { ...chartDefaults.scales.y, min: 0, max: 4,
-                 title: { display: true, text: 'Studytime moyen (/4)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            y: { 
+                ...chartDefaults.scales.y, 
+                // On supprime "max: 4" car l'axe Y représente maintenant un effectif (count)
+                beginAtZero: true, 
+                title: { 
+                    display: true, 
+                    text: "Nombre d'étudiants", 
+                    font: { size: 10, family: 'DM Mono' }, 
+                    color: '#aaa' 
+                } 
+            }
         }
     }
 });
 
 // 5 — Note finale (G3) selon Dalc — corrélation négative attendue
-new Chart(document.getElementById('chartCorrelations'), {
-    type: 'line',
+new Chart(document.getElementById('chartGradesDalcReason'), {
+    type: 'bar',
     data: {
-        labels: ['1','2','3','4','5'],
-        datasets: [{
-            label: 'G3 moyen',
-            data: [11.5, 10.8, 10.2, 9.6, 9.0],
-            borderColor: 'rgba(239,68,68,0.85)',
-            backgroundColor: 'rgba(239,68,68,0.06)',
-            borderWidth: 2.5,
-            pointBackgroundColor: 'rgba(239,68,68,0.85)',
-            pointRadius: 5,
-            pointHoverRadius: 7,
-            tension: 0,
-            fill: false,
-        }]
+        // L'axe X : les 5 niveaux de consommation d'alcool (Dalc)
+        labels: ['1', '2', '3', '4', '5'],
+        
+        // L'équivalent de hue="reason" : on crée 4 datasets
+        datasets: [
+            {
+                label: 'Proximité (home)',
+                data: [10.78, 10.21, 9.51, 8.83, 12.33], // Valeurs aléatoires (moyennes sur 20)
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                borderRadius: 4,
+            },
+            {
+                label: 'Réputation (reputation)',
+                data: [11.51, 10.42, 11.05, 0, 12.667], 
+                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                borderRadius: 4,
+            },
+            {
+                label: 'Cours (course)',
+                data: [10.52, 8.77, 11.25, 6.66, 10.77], 
+                backgroundColor: 'rgba(255, 206, 86, 0.7)',
+                borderRadius: 4,
+            },
+            {
+                label: 'Autre (other)',
+                data: [11.04, 11.9, 9.66, 10.66, 6.83], 
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                borderRadius: 4,
+            }
+        ]
     },
     options: {
         ...chartDefaults,
         plugins: {
-            legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` G3 moyen : ${ctx.parsed.y} / 20` } }
+            title: {
+                display: true,
+                font: { size: 14, family: 'DM Mono' },
+                color: '#aaa'
+            },
+            legend: { 
+                display: true,
+                position: 'bottom'
+            },
+            tooltip: { 
+                callbacks: { 
+                    label: ctx => ` ${ctx.dataset.label} : ${ctx.parsed.y} / 20` 
+                } 
+            }
         },
         scales: {
-            x: { ...chartDefaults.scales.x,
-                 title: { display: true, text: 'Niveau de consommation (Dalc)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } },
-            y: { ...chartDefaults.scales.y, min: 0, max: 20,
-                 title: { display: true, text: 'Note G3 (moyenne)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } }
+            ...chartDefaults.scales,
+            x: {
+                ...chartDefaults.scales.x,
+                title: { display: true, text: "Consommation d'alcool (Dalc)", font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+            },
+            y: { 
+                ...chartDefaults.scales.y, 
+                min: 0, 
+                max: 20,
+                title: { display: true, text: 'Note moyenne', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } 
+            }
         }
     }
 });

@@ -42,7 +42,7 @@ def run(X_train, X_test, y_train, y_test) -> dict:
         'n_neighbors': [3, 5, 7, 9, 11, 15], 
         'weights'    : ['uniform', 'distance'],
         'metric'     : ['euclidean', 'manhattan'],
-        # 'algorithm': ['kd_tree', 'ball_tree'] # Optionnel: peut accélérer si bcp de dimensions
+        'algorithm': ['kd_tree', 'ball_tree'] 
     }
 
     # OPTIMISATION 2 & 3 : RandomizedSearch + cv=3
