@@ -35,52 +35,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $data[$k] = $val;
     }
 
-    // ── Appel à l'API Render ──
-    $api_url = 'https://addiction-api.onrender.com/predict/alcohol';
+    $predict_script = __DIR__ . '/predict_alcohol.py';
+    $python = 'py'; // Windows MAMP
 
-    $payload = json_encode([
-        'age'        => (int)$data['age'],
-        'G1'         => (int)$data['G1'],
-        'G2'         => (int)$data['G2'],
-        'G3'         => (int)$data['G3'],
-        'freetime'   => (int)$data['freetime'],
-        'goout'      => (int)$data['goout'],
-        'health'     => (int)$data['health'],
-        'absences'   => (int)$data['absences'],
-        'studytime'  => (int)$data['studytime'],
-        'Mjob'       => $data['Mjob'],
-        'Fjob'       => $data['Fjob'],
-        'reason'     => $data['reason'],
-        'activities' => $data['activities'],
-        'romantic'   => $data['romantic'],
+    $args = implode(' ', [
+        escapeshellarg((string)$data['age']),
+        escapeshellarg((string)$data['G1']),
+        escapeshellarg((string)$data['G2']),
+        escapeshellarg((string)$data['G3']),
+        escapeshellarg((string)$data['freetime']),
+        escapeshellarg((string)$data['goout']),
+        escapeshellarg((string)$data['health']),
+        escapeshellarg((string)$data['absences']),
+        escapeshellarg((string)$data['studytime']),
+        escapeshellarg($data['Mjob']),
+        escapeshellarg($data['Fjob']),
+        escapeshellarg($data['reason']),
+        escapeshellarg($data['activities']),
+        escapeshellarg($data['romantic']),
     ]);
 
-    $ch = curl_init($api_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST,           true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_TIMEOUT,        30);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    $curl_err = curl_error($ch);
-    curl_close($ch);
+    $cmd    = "$python -W ignore " . escapeshellarg($predict_script) . " $args 2>&1";
+    $output = trim(shell_exec($cmd));
 
-    if ($curl_err) {
-        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $curl_err]);
-        exit;
-    }
+    $lines  = explode("\n", $output);
+    $last   = trim(end($lines));
 
-    $result = json_decode($response, true);
+    $result = json_decode($last, true);
     if (!$result) {
-        echo json_encode(['error' => 'Réponse invalide de l\'API', 'raw' => $response]);
-    } elseif (isset($result['erreur'])) {
-        echo json_encode(['error' => $result['erreur']]);
+        echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
     } else {
-        echo json_encode($result);
+        if (isset($result['erreur'])) {
+            echo json_encode(['error' => $result['erreur']]);
+        } else {
+            echo json_encode($result);
+        }
     }
     exit;
-    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -145,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <p class="dataset-hero-sub">
             Étude sur la consommation d'alcool quotidienne d'étudiants en mathématiques,
             croisée avec leurs résultats scolaires, leur vie sociale et leur contexte familial.
-            <BR>Besoin d'aide ? Cliquez <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">ICI</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
+            <BR>Besoin d'aide ? Consulter ce <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">site</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
         </p>
         <div class="dataset-hero-pills">
             <span class="hero-pill"><span class="hero-pill-dot"></span>395 étudiants</span>
@@ -171,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="stats-bar reveal">
         <div class="stat-box"><span class="stat-box-num">395</span><span class="stat-box-label">Étudiants</span></div>
         <div class="stat-box"><span class="stat-box-num">14</span><span class="stat-box-label">Variables</span></div>
-        <div class="stat-box"><span class="stat-box-num">0.0913</span><span class="stat-box-label">R² du meilleur modèle</span></div>
+        <div class="stat-box"><span class="stat-box-num">0.0630</span><span class="stat-box-label">R² du meilleur modèle</span></div>
         <div class="stat-box"><span class="stat-box-num">5</span><span class="stat-box-label">Modèles testés</span></div>
     </div>
 
@@ -185,8 +177,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             leurs résultats scolaires et leur consommation d'alcool.
         </p>
         <p class="block-text">
-            La <strong>variable cible</strong> est <code>Dalc</code> — la consommation d'alcool journialière,
-            sur une échelle de <strong>1 (très faible) à 5 (très élevée)</strong>. 
+            La <strong>variable cible</strong> est <code>Dalc</code> — la consommation d'alcool journalière,
+            sur une échelle de <strong>1 à 5 verres</strong>. Il s'agit d'un problème
+            de <strong>classification multiclasse</strong>.
         </p>
         <div class="info-grid">
             <div class="info-card">
@@ -199,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
             <div class="info-card">
                 <p class="info-card-title">Origine des données</p>
-                <p class="info-card-text">Dataset public issu de Kaggle (P. Cortez & A. Silva, 2008), provenance des données inconnue. Utilisé à des fins strictement pédagogiques.</p>
+                <p class="info-card-text">Dataset public issu de Kaggle (P. Cortez & A. Silva, 2008), dont la provenance est inconnue. Utilisé à des fins strictement pédagogiques.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Preprocessing</p>
@@ -230,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Graphique 2 : Distribution de Dalc -->
                 <div class="chart-card">
-                    <p class="chart-title">Distribution de la consommation (Dalc)</p>
+                    <p class="chart-title">Raison d'inscription dans l'école</p>
                     <div class="chart-canvas-wrap">
                         <canvas id="chartReason"></canvas>
                     </div>
@@ -238,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Graphique 3 : Dalc selon fréquence de sorties -->
                 <div class="chart-card">
-                    <p class="chart-title">Moyenne du nombre de sortie avec des amis selon la consommation d'alcool</p>
+                    <p class="chart-title">Nombre moyen de sortie avec des amis selon la consommation d'alcool </p>
                     <div class="chart-canvas-wrap">
                         <canvas id="chartFreetimeDalc"></canvas>
                     </div>
@@ -270,9 +263,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <h2 class="block-title">Comparaison des modèles entraînés</h2>
         <p class="block-text">
             Nous avons testé <strong>5 algorithmes de classification et régression</strong> avec différentes stratégies
-            d'encodage (LabelEncoder, OneHotEncoder, ACP). Cependant, notre jeu de donnée étant généré aléatoirement, nos modèles ne peuvent expliquer la variance que très faiblement. De plus, le déséquilibre des classes (majorité Dalc=1)
+            d'encodage (LabelEncoder, OneHotEncoder, ACP). Cependant, notre jeu de donnée à une provenance inconnue et nos modèles ne peuvent expliquer la variance que très faiblement. De plus, le déséquilibre des classes (majorité Dalc=1)
             rend tout apprentissage à nuancer. Le meilleur modèle retenu est le
-            <strong>KNN (LE)</strong> avec une R² de 0.0913.
+            <strong>KNN (LE)</strong> avec une R² de 0.0630.
         </p>
 
         <div class="models-grid">
@@ -282,16 +275,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="model-metrics">
                     <div class="metric-row">
                         <span class="metric-label">R²</span>
-                        <span class="metric-value good">0.0913</span>
+                        <span class="metric-value good">0.0630</span>
                     </div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:62%"></div></div>
                     <div class="metric-row">
                         <span class="metric-label">MAE</span>
-                        <span class="metric-value">0.5970</span>
+                        <span class="metric-value">0.5856</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">RMSE</span>
-                        <span class="metric-value">0.7956</span>
+                        <span class="metric-value">0.8080</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">Encodage</span>
@@ -318,9 +311,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="model-metrics">
                     <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.0579</span></div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:58%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.4557</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.7812</span></div>
-                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">OHE</span></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.6099</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.8102</span></div>
+                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">ACP</span></div>
                 </div>
             </div>
 
@@ -523,10 +516,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Conseil si niveau élevé -->
                 <div class="pro-advice" id="proAdvice">
-                    <p><strong>⚠ Niveau de consommation élevé détecté !</strong>
+                    <strong>⚠ Niveau de consommation élevé détecté !</strong>
                     Ton niveau de consommation d'alcool est significativement élevé. Il peut être utile d'en parler à un professionnel de santé (médecin, psychologue ou conseiller universitaire). Des ressources comme <em>Santé Psy Étudiant</em> proposent des consultations gratuites.
-                    Cliquez <a href="https://www.ameli.fr/assure/sante/themes/alcool-sante/arreter-consommation-cas-dependance">ICI</a> ou appelez le 0 980 980 930, de 8 h à 2 h, 7 jours sur 7 (appel non surtaxé, au prix d'une communication locale depuis un poste fixe). 
-                    </p>
                 </div>
             </div>
 
@@ -675,7 +666,6 @@ new Chart(document.getElementById('chartComparaisonR2'), {
     }
 });
 
-// 3 — Dalc moyen selon la fréquence de sorties (goout 1–5)
 new Chart(document.getElementById('chartFreetimeDalc'), {
     // type 'line' pour tracer une droite
     type: 'line', 
@@ -690,6 +680,8 @@ new Chart(document.getElementById('chartFreetimeDalc'), {
             pointBackgroundColor: 'rgba(54, 162, 235, 0.9)',
             pointRadius: 5,
             pointHoverRadius: 7,
+            // tension: 0 permet d'avoir des droites strictes entre les points
+            // tension: 0.3 ferait une courbe lissée
             tension: 0.3, 
             fill: true
         }]
@@ -703,7 +695,7 @@ new Chart(document.getElementById('chartFreetimeDalc'), {
                 color: '#aaa'
             },
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Temps libre moyen : ${ctx.parsed.y} / 5` } }
+            tooltip: { callbacks: { label: ctx => ` Sortie avec amis : ${ctx.parsed.y} / 5` } }
         },
         scales: {
             x: { ...chartDefaults.scales.x },
@@ -711,7 +703,7 @@ new Chart(document.getElementById('chartFreetimeDalc'), {
                 ...chartDefaults.scales.y, 
                 min: 2.5, 
                 max: 4.5,
-                title: { display: true, text: 'Temps libre (freetime)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+                title: { display: true, text: 'Sortie avec amis (goout)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
             }
         }
     }
@@ -851,7 +843,7 @@ new Chart(document.getElementById('chartGradesDalcReason'), {
 
 // ── Graphique de positionnement du résultat ──────────────
 let resultPositionChart = null;
-const distData   = [276, 75, 26, 9, 9];
+const distData   = [130, 115, 74, 50, 26];
 const distLabels = ['1','2','3','4','5'];
 
 function updateResultPositionChart(userScore) {
