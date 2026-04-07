@@ -34,39 +34,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         $data[$k] = $val;
     }
+    
+    // ── Appel à l'API Render ──
+    $api_url = 'https://addiction-api.onrender.com/predict/alcohol';
 
-    $predict_script = __DIR__ . '/predict_alcohol.py';
-    $python = 'py'; // Windows MAMP
-
-    $args = implode(' ', [
-        escapeshellarg((string)$data['age']),
-        escapeshellarg((string)$data['G1']),
-        escapeshellarg((string)$data['G2']),
-        escapeshellarg((string)$data['G3']),
-        escapeshellarg((string)$data['freetime']),
-        escapeshellarg((string)$data['goout']),
-        escapeshellarg((string)$data['health']),
-        escapeshellarg((string)$data['absences']),
-        escapeshellarg((string)$data['studytime']),
-        escapeshellarg($data['Mjob']),
-        escapeshellarg($data['Fjob']),
-        escapeshellarg($data['reason']),
-        escapeshellarg($data['activities']),
-        escapeshellarg($data['romantic']),
+   $payload = json_encode([
+        'age'        => (int)$data['age'],
+        'G1'         => (int)$data['G1'],
+        'G2'         => (int)$data['G2'],
+        'G3'         => (int)$data['G3'],
+        'freetime'   => (int)$data['freetime'],
+        'goout'      => (int)$data['goout'],
+        'health'     => (int)$data['health'],
+        'absences'   => (int)$data['absences'],
+        'studytime'  => (int)$data['studytime'],
+        'Mjob'       => $data['Mjob'],
+        'Fjob'       => $data['Fjob'],
+        'reason'     => $data['reason'],
+        'activities' => $data['activities'],
+        'romantic'   => $data['romantic'],
     ]);
 
-    $cmd    = "$python -W ignore " . escapeshellarg($predict_script) . " $args 2>&1";
-    $output = trim(shell_exec($cmd));
+    
 
-    $lines  = explode("\n", $output);
-    $last   = trim(end($lines));
+    $ch = curl_init($api_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST,           true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_TIMEOUT,        60);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    $result = json_decode($last, true);
-    if (!$result) {
-        echo json_encode(['error' => 'Erreur du modèle', 'raw' => $output]);
+    $response = curl_exec($ch);
+    $err      = curl_error($ch);
+    curl_close($ch);
+
+    if ($err) {
+        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $err]);
     } else {
-        if (isset($result['erreur'])) {
-            echo json_encode(['error' => $result['erreur']]);
+        $result = json_decode($response, true);
+        if (!$result) {
+            echo json_encode(['error' => 'Réponse invalide', 'raw' => $response]);
         } else {
             echo json_encode($result);
         }
@@ -483,6 +491,152 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         <select class="form-select" id="romantic" name="romantic">
                             <option value="no" selected>Non</option>
                             <option value="yes">Oui</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="school">École</label>
+                        <select class="form-select" id="school" name="school">
+                            <option value="GP" selected>Gabriel Pereira (GP)</option>
+                            <option value="MS">Mousinho da Silveira (MS)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="sex">Sexe</label>
+                        <select class="form-select" id="sex" name="sex">
+                            <option value="M" selected>Masculin</option>
+                            <option value="F">Féminin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="address">Type de domicile</label>
+                        <select class="form-select" id="address" name="address">
+                            <option value="U" selected>Urbain</option>
+                            <option value="R">Rural</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="famsize">Taille de la famille</label>
+                        <select class="form-select" id="famsize" name="famsize">
+                            <option value="GT3" selected>Plus de 3 membres (GT3)</option>
+                            <option value="LE3">3 membres ou moins (LE3)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="Pstatus">Situation des parents</label>
+                        <select class="form-select" id="Pstatus" name="Pstatus">
+                            <option value="T" selected>Ensemble (T)</option>
+                            <option value="A">Séparés (A)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="Medu">Niveau d'éducation de la mère (0–4)</label>
+                        <select class="form-select" id="Medu" name="Medu">
+                            <option value="0">0 — Aucun</option>
+                            <option value="1">1 — Primaire</option>
+                            <option value="2" selected>2 — 5ème à 9ème année</option>
+                            <option value="3">3 — Enseignement secondaire</option>
+                            <option value="4">4 — Enseignement supérieur</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="Fedu">Niveau d'éducation du père (0–4)</label>
+                        <select class="form-select" id="Fedu" name="Fedu">
+                            <option value="0">0 — Aucun</option>
+                            <option value="1">1 — Primaire</option>
+                            <option value="2" selected>2 — 5ème à 9ème année</option>
+                            <option value="3">3 — Enseignement secondaire</option>
+                            <option value="4">4 — Enseignement supérieur</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="traveltime">Temps de trajet domicile–école</label>
+                        <select class="form-select" id="traveltime" name="traveltime">
+                            <option value="1">1 — Moins de 15 min</option>
+                            <option value="2" selected>2 — 15 à 30 min</option>
+                            <option value="3">3 — 30 min à 1h</option>
+                            <option value="4">4 — Plus d'1h</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="failures">Nombre d'échecs passés</label>
+                        <input class="form-input" type="number" id="failures" name="failures"
+                               min="0" max="4" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="famrel">Qualité des relations familiales (1 = très mauvaise, 5 = excellente)</label>
+                        <select class="form-select" id="famrel" name="famrel">
+                            <option value="1">1 — Très mauvaise</option>
+                            <option value="2">2 — Mauvaise</option>
+                            <option value="3">3 — Moyenne</option>
+                            <option value="4" selected>4 — Bonne</option>
+                            <option value="5">5 — Excellente</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="guardian">Tuteur légal</label>
+                        <select class="form-select" id="guardian" name="guardian">
+                            <option value="mother" selected>Mère</option>
+                            <option value="father">Père</option>
+                            <option value="other">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="schoolsup">Soutien scolaire supplémentaire</label>
+                        <select class="form-select" id="schoolsup" name="schoolsup">
+                            <option value="no" selected>Non</option>
+                            <option value="yes">Oui</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="famsup">Soutien éducatif familial</label>
+                        <select class="form-select" id="famsup" name="famsup">
+                            <option value="yes" selected>Oui</option>
+                            <option value="no">Non</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="paid">Cours payants supplémentaires</label>
+                        <select class="form-select" id="paid" name="paid">
+                            <option value="no" selected>Non</option>
+                            <option value="yes">Oui</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="nursery">A fréquenté une crèche / garderie</label>
+                        <select class="form-select" id="nursery" name="nursery">
+                            <option value="yes" selected>Oui</option>
+                            <option value="no">Non</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="higher">Souhaite faire des études supérieures</label>
+                        <select class="form-select" id="higher" name="higher">
+                            <option value="yes" selected>Oui</option>
+                            <option value="no">Non</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="internet">Accès à internet à la maison</label>
+                        <select class="form-select" id="internet" name="internet">
+                            <option value="yes" selected>Oui</option>
+                            <option value="no">Non</option>
                         </select>
                     </div>
 
