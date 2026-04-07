@@ -241,15 +241,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="chart-card">
                     <p class="chart-title">Nombre moyen de sortie avec des amis selon la consommation d'alcool </p>
                     <div class="chart-canvas-wrap">
-                        <canvas id="chartFreetimeDalc"></canvas>
+                        <canvas id="chartAmisDalc"></canvas>
                     </div>
                 </div>
 
                 <!-- Graphique 4 :  -->
                 <div class="chart-card">
-                    <p class="chart-title">Comparaison des modèles</p>
+                    <p class="chart-title">Temps libre moyen selon la consommation d'alcool</p>
                     <div class="chart-canvas-wrap">
-                        <canvas id="chartComparaisonR2"></canvas>
+                        <canvas id="chartFreetimeD"></canvas>
                     </div>
                 </div>
 
@@ -494,151 +494,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="school">École</label>
-                        <select class="form-select" id="school" name="school">
-                            <option value="GP" selected>Gabriel Pereira (GP)</option>
-                            <option value="MS">Mousinho da Silveira (MS)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="sex">Sexe</label>
-                        <select class="form-select" id="sex" name="sex">
-                            <option value="M" selected>Masculin</option>
-                            <option value="F">Féminin</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="address">Type de domicile</label>
-                        <select class="form-select" id="address" name="address">
-                            <option value="U" selected>Urbain</option>
-                            <option value="R">Rural</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="famsize">Taille de la famille</label>
-                        <select class="form-select" id="famsize" name="famsize">
-                            <option value="GT3" selected>Plus de 3 membres (GT3)</option>
-                            <option value="LE3">3 membres ou moins (LE3)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="Pstatus">Situation des parents</label>
-                        <select class="form-select" id="Pstatus" name="Pstatus">
-                            <option value="T" selected>Ensemble (T)</option>
-                            <option value="A">Séparés (A)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="Medu">Niveau d'éducation de la mère (0–4)</label>
-                        <select class="form-select" id="Medu" name="Medu">
-                            <option value="0">0 — Aucun</option>
-                            <option value="1">1 — Primaire</option>
-                            <option value="2" selected>2 — 5ème à 9ème année</option>
-                            <option value="3">3 — Enseignement secondaire</option>
-                            <option value="4">4 — Enseignement supérieur</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="Fedu">Niveau d'éducation du père (0–4)</label>
-                        <select class="form-select" id="Fedu" name="Fedu">
-                            <option value="0">0 — Aucun</option>
-                            <option value="1">1 — Primaire</option>
-                            <option value="2" selected>2 — 5ème à 9ème année</option>
-                            <option value="3">3 — Enseignement secondaire</option>
-                            <option value="4">4 — Enseignement supérieur</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="traveltime">Temps de trajet domicile–école</label>
-                        <select class="form-select" id="traveltime" name="traveltime">
-                            <option value="1">1 — Moins de 15 min</option>
-                            <option value="2" selected>2 — 15 à 30 min</option>
-                            <option value="3">3 — 30 min à 1h</option>
-                            <option value="4">4 — Plus d'1h</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="failures">Nombre d'échecs passés</label>
-                        <input class="form-input" type="number" id="failures" name="failures"
-                               min="0" max="4" value="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="famrel">Qualité des relations familiales (1 = très mauvaise, 5 = excellente)</label>
-                        <select class="form-select" id="famrel" name="famrel">
-                            <option value="1">1 — Très mauvaise</option>
-                            <option value="2">2 — Mauvaise</option>
-                            <option value="3">3 — Moyenne</option>
-                            <option value="4" selected>4 — Bonne</option>
-                            <option value="5">5 — Excellente</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="guardian">Tuteur légal</label>
-                        <select class="form-select" id="guardian" name="guardian">
-                            <option value="mother" selected>Mère</option>
-                            <option value="father">Père</option>
-                            <option value="other">Autre</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="schoolsup">Soutien scolaire supplémentaire</label>
-                        <select class="form-select" id="schoolsup" name="schoolsup">
-                            <option value="no" selected>Non</option>
-                            <option value="yes">Oui</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="famsup">Soutien éducatif familial</label>
-                        <select class="form-select" id="famsup" name="famsup">
-                            <option value="yes" selected>Oui</option>
-                            <option value="no">Non</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="paid">Cours payants supplémentaires</label>
-                        <select class="form-select" id="paid" name="paid">
-                            <option value="no" selected>Non</option>
-                            <option value="yes">Oui</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="nursery">A fréquenté une crèche / garderie</label>
-                        <select class="form-select" id="nursery" name="nursery">
-                            <option value="yes" selected>Oui</option>
-                            <option value="no">Non</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="higher">Souhaite faire des études supérieures</label>
-                        <select class="form-select" id="higher" name="higher">
-                            <option value="yes" selected>Oui</option>
-                            <option value="no">Non</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="internet">Accès à internet à la maison</label>
-                        <select class="form-select" id="internet" name="internet">
-                            <option value="yes" selected>Oui</option>
-                            <option value="no">Non</option>
-                        </select>
-                    </div>
 
                 </div>
 
@@ -755,44 +610,28 @@ new Chart(document.getElementById('chartReason'), {
 });
 
 // 2 — Consommation moyenne par genre
-new Chart(document.getElementById('chartComparaisonR2'), {
-    type: 'bar',
+new Chart(document.getElementById('chartFreetimeD'), {
+    // type 'line' pour tracer une droite
+    type: 'line', 
     data: {
-        // Tes modèles, déjà triés du meilleur au moins bon
-        labels: [
-            'KNN (LE)', 
-            'XGBoost RGS (ACP)', 
-            'KNN (OHE)', 
-            'KNN (ACP)', 
-            'XGBoost (ACP)', 
-            'Random Forest (ACP)', 
-            'XGBoost RGS (LE)', 
-            'XGBoost RGS (OHE)', 
-            'XGBoost (LE)', 
-            'Random Forest (OHE)', 
-            'Random Forest (LE)', 
-            'XGBoost (OHE)'
-        ],
+        labels: ['1', '2', '3', '4', '5'],
         datasets: [{
-            label: 'R²',
-            // Tes valeurs
-            data: [
-                0.0913, 0.0579, 0.0371, 0.0287, 
-                0.0003, -0.0193, -0.1020, -0.1046, 
-                -0.1092, -0.1322, -0.1911, -0.2595
-            ], 
-            // ── ASTUCE : Vert si positif, Rouge si négatif ──
-            backgroundColor: function(context) {
-                const value = context.dataset.data[context.dataIndex];
-                return value >= 0 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)';
-            },
-            borderRadius: 4,
-            barPercentage: 0.7 
+            label: 'Temps libre moyen',
+            data: [3.115942, 3.400000, 3.576923, 3.666667, 4.111111], 
+            borderColor: 'rgba(54, 162, 235, 0.9)',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+            borderWidth: 2.5,
+            pointBackgroundColor: 'rgba(54, 162, 235, 0.9)',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            // tension: 0 permet d'avoir des droites strictes entre les points
+            // tension: 0.3 ferait une courbe lissée
+            tension: 0.3, 
+            fill: true
         }]
     },
     options: {
         ...chartDefaults,
-        indexAxis: 'y', // Toujours en barres horizontales
         plugins: {
             title: {
                 display: true,
@@ -800,33 +639,28 @@ new Chart(document.getElementById('chartComparaisonR2'), {
                 color: '#aaa'
             },
             legend: { display: false },
-            tooltip: { 
-                callbacks: { 
-                    label: ctx => ` R² : ${ctx.parsed.x}` 
-                } 
-            }
+            tooltip: { callbacks: { label: ctx => ` Temps libre : ${ctx.parsed.y} / 5` } }
         },
         scales: {
-            x: { 
-                ...chartDefaults.scales.x, 
-                // On laisse Chart.js gérer le min et le max automatiquement grâce aux valeurs négatives
-                title: { display: true, text: 'Score R²', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } 
-            },
+            x: { ...chartDefaults.scales.x },
             y: { 
-                ...chartDefaults.scales.y,
-                grid: { display: false } 
+                ...chartDefaults.scales.y, 
+                min: 3, 
+                max: 4.5,
+                title: { display: true, text: 'Temps libre moyen (FreeTime)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
             }
         }
     }
 });
 
-new Chart(document.getElementById('chartFreetimeDalc'), {
+
+new Chart(document.getElementById('chartAmisDalc'), {
     // type 'line' pour tracer une droite
     type: 'line', 
     data: {
         labels: ['1', '2', '3', '4', '5'],
         datasets: [{
-            label: 'Temps libre moyen',
+            label: 'Sorties avec amis',
             data: [2.931159, 3.360000, 3.692308, 3.666667, 4.222222], 
             borderColor: 'rgba(54, 162, 235, 0.9)',
             backgroundColor: 'rgba(54, 162, 235, 0.1)',
@@ -997,7 +831,7 @@ new Chart(document.getElementById('chartGradesDalcReason'), {
 
 // ── Graphique de positionnement du résultat ──────────────
 let resultPositionChart = null;
-const distData   = [130, 115, 74, 50, 26];
+const distData   = [276, 75, 26, 9, 9];
 const distLabels = ['1','2','3','4','5'];
 
 function updateResultPositionChart(userScore) {
@@ -1083,7 +917,7 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
         } else {
             const score = parseInt(data.score);
             const pct   = ((score - 1) / 4 * 100).toFixed(0);
-            const acc   = data.fiabilite !== undefined ? data.fiabilite : '62';
+            const acc   = data.fiabilite !== undefined ? data.fiabilite : '57';
 
             // Niveau
             let level = '', levelClass = '';
