@@ -149,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <p class="dataset-hero-sub">
                 Etude de la population générale portant sur les comportements addictifs liés au tabac, analysés à travers des variables socio-démographiques, économiques et comportementales.
+                <BR>Besoin d'aide ? Cliquez <a href="https://www.tabac-info-service.fr/je-me-fais-accompagner/le-39-89">ICI</a> ou appelez le 39 89, du lundi au samedi de 8h à 20h.
             </p>
 
             <div class="dataset-hero-pills">

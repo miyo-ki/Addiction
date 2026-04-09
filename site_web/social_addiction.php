@@ -140,6 +140,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <p class="dataset-hero-sub">
             Analyse comportementale de l'usage excessif des plateformes numériques
             et son impact sur la santé mentale de 705 étudiants.
+            <BR>Besoin d'aide ? Cliquez <a href="https://mda.loire-atlantique.fr/44/ados-et-jeunes/je-suis-accro-aux-reseaux-sociaux-et/ou-aux-jeux-video/mda_8497">ICI</a> ou appelez le 0800 200 000, du lundi au vendredi de 9h à 19h.
+
         </p>
         <div class="dataset-hero-pills">
             <span class="hero-pill"><span class="hero-pill-dot"></span>705 étudiants</span>

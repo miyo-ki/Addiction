@@ -34,11 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         $data[$k] = $val;
     }
-
+    
     // ── Appel à l'API Render ──
     $api_url = 'https://addiction-api.onrender.com/predict/alcohol';
 
-    $payload = json_encode([
+   $payload = json_encode([
         'age'        => (int)$data['age'],
         'G1'         => (int)$data['G1'],
         'G2'         => (int)$data['G2'],
@@ -55,32 +55,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         'romantic'   => $data['romantic'],
     ]);
 
+    
+
     $ch = curl_init($api_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST,           true);
     curl_setopt($ch, CURLOPT_POSTFIELDS,     $payload);
     curl_setopt($ch, CURLOPT_HTTPHEADER,     ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_TIMEOUT,        30);
+    curl_setopt($ch, CURLOPT_TIMEOUT,        60);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
     $response = curl_exec($ch);
-    $curl_err = curl_error($ch);
+    $err      = curl_error($ch);
     curl_close($ch);
 
-    if ($curl_err) {
-        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $curl_err]);
-        exit;
-    }
-
-    $result = json_decode($response, true);
-    if (!$result) {
-        echo json_encode(['error' => 'Réponse invalide de l\'API', 'raw' => $response]);
-    } elseif (isset($result['erreur'])) {
-        echo json_encode(['error' => $result['erreur']]);
+    if ($err) {
+        echo json_encode(['error' => 'Impossible de joindre l\'API : ' . $err]);
     } else {
-        echo json_encode($result);
+        $result = json_decode($response, true);
+        if (!$result) {
+            echo json_encode(['error' => 'Réponse invalide', 'raw' => $response]);
+        } else {
+            echo json_encode($result);
+        }
     }
     exit;
-    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -151,7 +151,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <span class="hero-pill"><span class="hero-pill-dot"></span>395 étudiants</span>
             <span class="hero-pill"><span class="hero-pill-dot"></span>14 variables</span>
             <span class="hero-pill"><span class="hero-pill-dot"></span>Classification · Dalc 1–5</span>
-            <span class="hero-pill"><span class="hero-pill-dot"></span>Accuracy = 0.62</span>
         </div>
     </div>
 </header>
@@ -172,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <div class="stats-bar reveal">
         <div class="stat-box"><span class="stat-box-num">395</span><span class="stat-box-label">Étudiants</span></div>
         <div class="stat-box"><span class="stat-box-num">14</span><span class="stat-box-label">Variables</span></div>
-        <div class="stat-box"><span class="stat-box-num">0.0913</span><span class="stat-box-label">R² du meilleur modèle</span></div>
+        <div class="stat-box"><span class="stat-box-num">0.0630</span><span class="stat-box-label">R² du meilleur modèle</span></div>
         <div class="stat-box"><span class="stat-box-num">5</span><span class="stat-box-label">Modèles testés</span></div>
     </div>
 
@@ -181,13 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="block-label"><span class="block-label-line"></span>Présentation du dataset</div>
         <h2 class="block-title">Student Alcohol Consumption — Math</h2>
         <p class="block-text">
-            Ce jeu de données recense <strong>395 étudiants</strong> inscrits en cours de mathématiques
-            dans deux lycées portugais. Il documente leur contexte familial, leurs habitudes de vie,
+            Ce jeu de données recense <strong>395 étudiants</strong> inscrits en cours de mathématiques.
+            Il documente leur contexte familial, leurs habitudes de vie,
             leurs résultats scolaires et leur consommation d'alcool.
         </p>
         <p class="block-text">
-            La <strong>variable cible</strong> est <code>Dalc</code> — la consommation d'alcool en semaine,
-            sur une échelle de <strong>1 (très faible) à 5 (très élevée)</strong>. Il s'agit d'un problème
+            La <strong>variable cible</strong> est <code>Dalc</code> — la consommation d'alcool journalière,
+            sur une échelle de <strong>1 à 5 verres</strong>. Il s'agit d'un problème
             de <strong>classification multiclasse</strong>.
         </p>
         <div class="info-grid">
@@ -197,11 +196,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             </div>
             <div class="info-card">
                 <p class="info-card-title">Variable cible</p>
-                <p class="info-card-text">Dalc : consommation d'alcool en semaine (1–5). Il s'agit d'un problème de <strong>classification</strong> : on prédit une catégorie ordinale, non une valeur continue.</p>
+                <p class="info-card-text">Dalc : consommation d'alcool journalière (1–5). Il s'agit d'un problème de <strong>classification</strong> : on prédit une catégorie ordinale, non une valeur continue.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Origine des données</p>
-                <p class="info-card-text">Dataset public issu de Kaggle (P. Cortez & A. Silva, 2008), collecté auprès d'élèves de lycées portugais. Utilisé à des fins strictement pédagogiques.</p>
+                <p class="info-card-text">Dataset public issu de Kaggle (P. Cortez & A. Silva, 2008), dont la provenance est inconnue. Utilisé à des fins strictement pédagogiques.</p>
             </div>
             <div class="info-card">
                 <p class="info-card-title">Preprocessing</p>
@@ -232,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Graphique 2 : Distribution de Dalc -->
                 <div class="chart-card">
-                    <p class="chart-title">Distribution de la consommation (Dalc)</p>
+                    <p class="chart-title">Raison d'inscription dans l'école</p>
                     <div class="chart-canvas-wrap">
                         <canvas id="chartReason"></canvas>
                     </div>
@@ -240,17 +239,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
                 <!-- Graphique 3 : Dalc selon fréquence de sorties -->
                 <div class="chart-card">
-                    <p class="chart-title">Temps libre moyen selon la consommation d'alcool</p>
+                    <p class="chart-title">Nombre moyen de sortie avec des amis selon la consommation d'alcool </p>
                     <div class="chart-canvas-wrap">
-                        <canvas id="chartFreetimeDalc"></canvas>
+                        <canvas id="chartAmisDalc"></canvas>
                     </div>
                 </div>
 
                 <!-- Graphique 4 :  -->
                 <div class="chart-card">
-                    <p class="chart-title">Comparaison des modèles</p>
+                    <p class="chart-title">Temps libre moyen selon la consommation d'alcool</p>
                     <div class="chart-canvas-wrap">
-                        <canvas id="chartComparaisonR2"></canvas>
+                        <canvas id="chartFreetimeD"></canvas>
                     </div>
                 </div>
 
@@ -272,9 +271,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <h2 class="block-title">Comparaison des modèles entraînés</h2>
         <p class="block-text">
             Nous avons testé <strong>5 algorithmes de classification et régression</strong> avec différentes stratégies
-            d'encodage (LabelEncoder, OneHotEncoder, ACP). Cependant, notre jeu de donnée étant généré aléatoirement, nos modèles ne peuvent expliquer la variance que très faiblement. De plus, le déséquilibre des classes (majorité Dalc=1)
+            d'encodage (LabelEncoder, OneHotEncoder, ACP). Cependant, notre jeu de donnée à une provenance inconnue et nos modèles ne peuvent expliquer la variance que très faiblement. De plus, le déséquilibre des classes (majorité Dalc=1)
             rend tout apprentissage à nuancer. Le meilleur modèle retenu est le
-            <strong>KNN (LE)</strong> avec une R² de 0.0913.
+            <strong>KNN (LE)</strong> avec une R² de 0.0630.
         </p>
 
         <div class="models-grid">
@@ -284,16 +283,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="model-metrics">
                     <div class="metric-row">
                         <span class="metric-label">R²</span>
-                        <span class="metric-value good">0.0913</span>
+                        <span class="metric-value good">0.0630</span>
                     </div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:62%"></div></div>
                     <div class="metric-row">
                         <span class="metric-label">MAE</span>
-                        <span class="metric-value">0.5970</span>
+                        <span class="metric-value">0.5856</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">RMSE</span>
-                        <span class="metric-value">0.7956</span>
+                        <span class="metric-value">0.8080</span>
                     </div>
                     <div class="metric-row">
                         <span class="metric-label">Encodage</span>
@@ -320,9 +319,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="model-metrics">
                     <div class="metric-row"><span class="metric-label">R²</span><span class="metric-value">0.0579</span></div>
                     <div class="metric-bar-wrap"><div class="metric-bar" style="width:58%"></div></div>
-                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.4557</span></div>
-                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.7812</span></div>
-                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">OHE</span></div>
+                    <div class="metric-row"><span class="metric-label">MAE</span><span class="metric-value">0.6099</span></div>
+                    <div class="metric-row"><span class="metric-label">RMSE</span><span class="metric-value">0.8102</span></div>
+                    <div class="metric-row"><span class="metric-label">Encodage</span><span class="metric-value">ACP</span></div>
                 </div>
             </div>
 
@@ -495,6 +494,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                         </select>
                     </div>
 
+
                 </div>
 
                 <button type="submit" class="btn-predict">
@@ -610,73 +610,7 @@ new Chart(document.getElementById('chartReason'), {
 });
 
 // 2 — Consommation moyenne par genre
-new Chart(document.getElementById('chartComparaisonR2'), {
-    type: 'bar',
-    data: {
-        // Tes modèles, déjà triés du meilleur au moins bon
-        labels: [
-            'KNN (LE)', 
-            'XGBoost RGS (ACP)', 
-            'KNN (OHE)', 
-            'KNN (ACP)', 
-            'XGBoost (ACP)', 
-            'Random Forest (ACP)', 
-            'XGBoost RGS (LE)', 
-            'XGBoost RGS (OHE)', 
-            'XGBoost (LE)', 
-            'Random Forest (OHE)', 
-            'Random Forest (LE)', 
-            'XGBoost (OHE)'
-        ],
-        datasets: [{
-            label: 'R²',
-            // Tes valeurs
-            data: [
-                0.0913, 0.0579, 0.0371, 0.0287, 
-                0.0003, -0.0193, -0.1020, -0.1046, 
-                -0.1092, -0.1322, -0.1911, -0.2595
-            ], 
-            // ── ASTUCE : Vert si positif, Rouge si négatif ──
-            backgroundColor: function(context) {
-                const value = context.dataset.data[context.dataIndex];
-                return value >= 0 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)';
-            },
-            borderRadius: 4,
-            barPercentage: 0.7 
-        }]
-    },
-    options: {
-        ...chartDefaults,
-        indexAxis: 'y', // Toujours en barres horizontales
-        plugins: {
-            title: {
-                display: true,
-                font: { size: 14, family: 'DM Mono' },
-                color: '#aaa'
-            },
-            legend: { display: false },
-            tooltip: { 
-                callbacks: { 
-                    label: ctx => ` R² : ${ctx.parsed.x}` 
-                } 
-            }
-        },
-        scales: {
-            x: { 
-                ...chartDefaults.scales.x, 
-                // On laisse Chart.js gérer le min et le max automatiquement grâce aux valeurs négatives
-                title: { display: true, text: 'Score R²', font: { size: 10, family: 'DM Mono' }, color: '#aaa' } 
-            },
-            y: { 
-                ...chartDefaults.scales.y,
-                grid: { display: false } 
-            }
-        }
-    }
-});
-
-// 3 — Dalc moyen selon la fréquence de sorties (goout 1–5)
-new Chart(document.getElementById('chartFreetimeDalc'), {
+new Chart(document.getElementById('chartFreetimeD'), {
     // type 'line' pour tracer une droite
     type: 'line', 
     data: {
@@ -705,15 +639,59 @@ new Chart(document.getElementById('chartFreetimeDalc'), {
                 color: '#aaa'
             },
             legend: { display: false },
-            tooltip: { callbacks: { label: ctx => ` Temps libre moyen : ${ctx.parsed.y} / 5` } }
+            tooltip: { callbacks: { label: ctx => ` Temps libre : ${ctx.parsed.y} / 5` } }
         },
         scales: {
             x: { ...chartDefaults.scales.x },
             y: { 
                 ...chartDefaults.scales.y, 
-                min: 0, 
-                max: 5,
-                title: { display: true, text: 'Temps libre (freetime)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+                min: 3, 
+                max: 4.5,
+                title: { display: true, text: 'Temps libre moyen (FreeTime)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
+            }
+        }
+    }
+});
+
+
+new Chart(document.getElementById('chartAmisDalc'), {
+    // type 'line' pour tracer une droite
+    type: 'line', 
+    data: {
+        labels: ['1', '2', '3', '4', '5'],
+        datasets: [{
+            label: 'Sorties avec amis',
+            data: [2.931159, 3.360000, 3.692308, 3.666667, 4.222222], 
+            borderColor: 'rgba(54, 162, 235, 0.9)',
+            backgroundColor: 'rgba(54, 162, 235, 0.1)',
+            borderWidth: 2.5,
+            pointBackgroundColor: 'rgba(54, 162, 235, 0.9)',
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            // tension: 0 permet d'avoir des droites strictes entre les points
+            // tension: 0.3 ferait une courbe lissée
+            tension: 0.3, 
+            fill: true
+        }]
+    },
+    options: {
+        ...chartDefaults,
+        plugins: {
+            title: {
+                display: true,
+                font: { size: 14, family: 'DM Mono' },
+                color: '#aaa'
+            },
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` Sortie avec amis : ${ctx.parsed.y} / 5` } }
+        },
+        scales: {
+            x: { ...chartDefaults.scales.x },
+            y: { 
+                ...chartDefaults.scales.y, 
+                min: 2.5, 
+                max: 4.5,
+                title: { display: true, text: 'Sortie avec amis (goout)', font: { size: 10, family: 'DM Mono' }, color: '#aaa' }
             }
         }
     }
@@ -853,7 +831,7 @@ new Chart(document.getElementById('chartGradesDalcReason'), {
 
 // ── Graphique de positionnement du résultat ──────────────
 let resultPositionChart = null;
-const distData   = [130, 115, 74, 50, 26];
+const distData   = [276, 75, 26, 9, 9];
 const distLabels = ['1','2','3','4','5'];
 
 function updateResultPositionChart(userScore) {
@@ -939,7 +917,7 @@ document.getElementById('predictionForm').addEventListener('submit', async funct
         } else {
             const score = parseInt(data.score);
             const pct   = ((score - 1) / 4 * 100).toFixed(0);
-            const acc   = data.fiabilite !== undefined ? data.fiabilite : '62';
+            const acc   = data.fiabilite !== undefined ? data.fiabilite : '57';
 
             // Niveau
             let level = '', levelClass = '';
